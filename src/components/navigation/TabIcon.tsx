@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { NavigationKey } from '../../navigation/NavigationKey';
 import { sizes } from '../../theme/sizes';
+import React from 'react';
 
 interface Props {
   focused: boolean;

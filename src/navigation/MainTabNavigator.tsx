@@ -11,6 +11,7 @@ import {
   import { NavigationKey } from './NavigationKey';
   import { RootStackParamList } from './RootNavigator';
 import { TabIcon } from '../components/navigation/TabIcon';
+import React from 'react';
   
   export type MainTabParamList = {
     [NavigationKey.HomeScreen]: undefined;
