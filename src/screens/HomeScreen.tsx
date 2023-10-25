@@ -77,7 +77,6 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback style={styles.container} onPress={() => toggleSearch(!showSearch)}>
       <StatusBar style="light" /> 
       <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} />
 
@@ -98,7 +97,6 @@ export const HomeScreen: React.FC = () => {
           <DailyForecast weather={weather} weatherImages={weatherImages} />
         </SafeAreaView>
       )}
-      </TouchableWithoutFeedback>
     </View>
   );
 };
