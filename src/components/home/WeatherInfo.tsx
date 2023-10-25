@@ -24,6 +24,7 @@ type WeatherInfoProps = {
 const WeatherInfo: React.FC<WeatherInfoProps> = ({ current, location, weatherImages, weatherPT }) => {
   return (
     <View style={styles.weatherInfoContainer}>
+      <View style={styles.upperInfo}>
       <Text style={styles.locationText}>
         {location?.name},
         <Text style={styles.regionText}>
@@ -33,16 +34,19 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ current, location, weatherIma
           {" " + location?.country}
         </Text>
       </Text>
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
+
+      <View style={{ flexDirection: "column", justifyContent: "center" }}>
         <Image source={weatherImages[current?.condition?.text]} style={styles.weatherImage} />
       </View>
-      <View style={{ flexDirection: "column", justifyContent: "space-between" }}>
-        <Text style={styles.temperatureText}>
+
+      <Text style={styles.temperatureText}>
           {current?.temp_c}&#176;
         </Text>
         <Text style={styles.conditionText}>
           {weatherPT[current?.condition?.text]}
         </Text>
+        </View>
+      <View>
         <View style={styles.weatherDetailsContainer}>
           <View style={styles.detailItem}>
             <Image source={require("../../../assets/icons/wind.png")} style={styles.detailIcon} />
@@ -70,17 +74,21 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ current, location, weatherIma
 
 const styles = StyleSheet.create({
   weatherInfoContainer: {
-    marginHorizontal: 4,
-    flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: 'space-around',
+    alignItems: 'center',
     flex: 1,
-    marginBottom: 2,
+  },
+  upperInfo: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   locationText: {
     color: "white",
     textAlign: "center",
     fontSize: 24,
     fontWeight: "bold",
+    marginBottom: 30,
   },
   regionText: {
     color: "#A5B1C2",
@@ -108,16 +116,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     letterSpacing: 1,
-    marginBottom: 8,
   },
   weatherDetailsContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: 4,
+    justifyContent: "space-around",
   },
   detailItem: {
     flexDirection: "row",
     alignItems: "center",
+    marginHorizontal: 10,
   },
   detailIcon: {
     width: 24,

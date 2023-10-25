@@ -16,8 +16,9 @@ import { Location, Weather, WeatherImages, WeatherPT } from "../util/types";
 import SearchBar from "../components/home/SearchBar";
 import WeatherInfo from "../components/home/WeatherInfo";
 import DailyForecast from "../components/home/DailyForecast";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-const HomeScreen: React.FC = () => {
+export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(false);
   const [locations, setLocation] = React.useState([]);
   const [weather, setWeather] = React.useState<Weather>({} as Weather);
@@ -54,24 +55,31 @@ const HomeScreen: React.FC = () => {
   }, []);
 
   const fetchMyWeatherData = async () => {
-    let myCity = await getData("city");
-    let cityName = myCity ? myCity : "Recife";
-    featchWeatherForescast({
-      cityName: cityName,
-      days: "7",
-    }).then((data) => {
+    try {
+      let myCity = await getData("city");
+      let cityName = myCity ? myCity : "Paris";
+  
+      const data = await featchWeatherForescast({
+        cityName: cityName,
+        days: "7",
+      });
+  
       setWeather(data);
-    });
-    setLoading(false);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching weather data:", error);
+      setLoading(false);
+    }
   };
 
-  const handleTextDebouce = useCallback(debounce(handleSearch, 1200), {});
+  const handleTextDebouce = useCallback(debounce((value: string) => handleSearch(value), 1200), []);
   const { current, location } = weather;
 
   return (
     <View style={styles.container}>
-      <StatusBar style="light" />
-      <Image blurRadius={70} source={require("../../../assets/images/bg.png")} style={styles.background} />
+      <TouchableWithoutFeedback style={styles.container} onPress={() => toggleSearch(!showSearch)}>
+      <StatusBar style="light" /> 
+      <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} />
 
       {loading ? (
         <View style={styles.loadingContainer}>
@@ -90,15 +98,15 @@ const HomeScreen: React.FC = () => {
           <DailyForecast weather={weather} weatherImages={weatherImages} />
         </SafeAreaView>
       )}
+      </TouchableWithoutFeedback>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    height: Dimensions.get("window").height,
-    width: Dimensions.get("window").width,
+    height: '100%',
+    width: '100%',
   },
   background: {
     position: "absolute",
@@ -112,5 +120,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-export default HomeScreen;

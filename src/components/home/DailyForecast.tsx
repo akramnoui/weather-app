@@ -53,8 +53,9 @@ const styles = StyleSheet.create({
   forecastTitleContainer: {
     flexDirection: "row",
     alignItems: "center",
+    alignSelf: 'center',
     marginHorizontal: 5,
-    marginBottom: 3,
+    marginBottom: 10,
   },
   forecastIcon: {
     size: 22,
@@ -65,6 +66,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 5,
     fontWeight: "bold",
+    paddingTop: 2,
   },
   forecastScrollView: {
     paddingHorizontal: 15,
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
   forecastDayContainer: {
     justifyContent: "center",
     alignItems: "center",
-    width: 80,
+    width: 100,
     borderRadius: 16,
     paddingVertical: 8,
     marginHorizontal: 4,
