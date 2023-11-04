@@ -6,7 +6,7 @@ import {
   import { StackScreenProps } from '@react-navigation/stack';
   import { StyleSheet } from 'react-native';
   
-  import { HomeScreen, AlertScreen} from '../screens';
+  import { HomeScreen, AlertScreen, Preferences} from '../screens';
 //   import { Theme } from '../theme/main';
   import { NavigationKey } from './NavigationKey';
   import { RootStackParamList } from './RootNavigator';
@@ -41,6 +41,10 @@ import React from 'react';
         <Tab.Screen
           name={NavigationKey.AlertScreen}
           component={AlertScreen}
+        />
+         <Tab.Screen
+          name={NavigationKey.Preferences}
+          component={Preferences}
         />
       </Tab.Navigator>
     );

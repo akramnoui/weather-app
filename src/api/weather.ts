@@ -12,7 +12,7 @@ type locationsEndpoint = {
 };
 
 const forecastEndpoint = (params: forecastEndpoint) =>
-  `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${params.cityName}&days=${params.days}&aqi=no&alerts=no`;
+  `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${params.cityName}&days=${params.days}&aqi=no&alerts=yes`;
 
 const locationsEndpoint = (params: locationsEndpoint) =>
   `http://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${params.cityName}`;
@@ -24,6 +24,9 @@ const apiCall = async (endpoint: string) => {
   };
   try {
     const response = await axios.request(options);
+    console.log(endpoint);
+    
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.log("error", error);

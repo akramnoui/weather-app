@@ -15,6 +15,8 @@ interface Props {
 const iconMapper: { [key: string]: string } = {
   [NavigationKey.HomeScreen]: 'home',
   [NavigationKey.AlertScreen]: 'alert',
+  [NavigationKey.Preferences]: 'format-list-bulleted',
+
 };
 
 export const TabIcon: React.FC<Props> = ({
