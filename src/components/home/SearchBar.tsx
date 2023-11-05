@@ -14,14 +14,18 @@ type SearchBarProps = {
 };
 
 const SearchBar: React.FC<SearchBarProps> = ({ showSearch, toggleSearch, handleTextDebouce, locations, handleLocation }) => {
+  const onTextChange = (text: string) => {
+    if (!showSearch) {
+      toggleSearch(true);
+    }
+    handleTextDebouce(text)
+  }
   return (
-    <TouchableOpacity style={styles.searchContainer} onPress={() => toggleSearch(!showSearch)}>
+    <TouchableOpacity style={styles.searchContainer} onPress={() => toggleSearch(true)}>
       <View style={styles.searchInputContainer}>
-        {showSearch ? (
-          <TextInput onChangeText={(text) => handleTextDebouce(text)} placeholder="Search city.." placeholderTextColor={"lightgray"} style={styles.searchInput} />
-        ) : null}
+          <TextInput onChangeText={(text) => onTextChange(text)} placeholder="Search city.." placeholderTextColor={"lightgray"} style={styles.searchInput} />
 
-        <TouchableOpacity onPress={() => toggleSearch(!showSearch)} style={styles.searchIconContainer}>
+        <TouchableOpacity onPress={() => toggleSearch(true)} style={styles.searchIconContainer}>
           <MagnifyingGlassIcon size={25} color="white" />
         </TouchableOpacity>
       </View>
@@ -52,8 +56,8 @@ const styles = StyleSheet.create({
   searchContainer: {
     height: "10%",
     marginHorizontal: 4,
-    marginVertical: 10,
     position: "relative",
+    marginTop: 20,
     zIndex: 50,
   },
   searchInputContainer: {

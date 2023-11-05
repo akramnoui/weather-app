@@ -1,36 +1,62 @@
-
-import React, {  } from "react";
-import { View, Image, StyleSheet, Text } from "react-native";
-import { Weather } from "../util/types";
+import React, { useEffect, useState } from "react";
+import { View, Image, StyleSheet, Text, ScrollView } from "react-native";
 import MapView, { Polygon } from 'react-native-maps';
-
+import { getData } from "../storage/asyncStorage";
+import { PREFERRED_CITIES_KEY } from "./Preferences";
+import { fetchWeatherAlerts } from "../api/weather";
+import WeatherAlert from "../components/alert/WeatherAlert";
 
 export const AlertScreen: React.FC = () => {
-  const alertData = {
-    "headline": "Instituto Português do Mar e da Atmosfera",
-    "msgtype": "",
-    "severity": "",
-    "urgency": "",
-    "areas": "",
-    "category": "Coastal event",
-    "certainty": "",
-    "event": "Orange Coastal Event Warning",
-    "note": "",
-    "effective": "2023-11-03T15:00:00+00:00",
-    "expires": "2023-11-05T00:00:00+00:00",
-    "desc": "Waves from the northwest with a significant height of 5 to 7 meters, reaching a maximum height of 12/13 meters.",
-    "instruction": ""
+  const [weatherAlerts, setWeatherAlerts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchWeatherAlertsForCities = async () => {
+      try {
+        const preferredLocationsString = await getData(PREFERRED_CITIES_KEY);
+        if (preferredLocationsString) {
+          const preferredLocations = JSON.parse(preferredLocationsString);
+          console.log(preferredLocations);
+
+         // Fetch alerts for all cities
+          const alerts = await Promise.all(preferredLocations.map(async (location: { name: string }) => {
+            const alert = await fetchWeatherAlerts({ cityName: location.name });
+            if (alert.alerts.alert.length > 0) {
+              return { city: location.name, alerts: alert.alerts.alert, coordinates: location.coordinates };
+            } else {
+              return null; // Filter out cities with no alerts
+            }
+          }));
+
+          // Remove null values from the alerts array
+          const filteredAlerts = alerts.filter(alert => alert !== null);
+
+          console.log('filtered alerts', filteredAlerts);
+          setWeatherAlerts(filteredAlerts);
+        }
+      } catch (error) {
+        console.error("Error fetching weather alerts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWeatherAlertsForCities();
+  }, []);
+
+  const renderAlerts = () => {
+    if (weatherAlerts.length > 0) {
+      return (
+        <ScrollView style={{paddingBottom: 100}}>
+          {weatherAlerts.map((cityAlerts, index) => (
+            // Use the WeatherAlert component here
+            <WeatherAlert key={index} cityAlerts={cityAlerts} />
+          ))}
+        </ScrollView>
+      );
+    }
+    // Your existing code for no alerts
   };
-
-  const [showSearch, toggleSearch] = React.useState(false);
-  const [locations, setLocation] = React.useState([]);
-  const [weather, setWeather] = React.useState<Weather>({} as Weather);
-  const [loading, setLoading] = React.useState(false);
-
-  const affectedArea = [
-    { latitude: 37.7749, longitude: -122.4194 }, // Replace with actual coordinates
-    // Add more coordinates as needed
-  ];
 
   return (
     <View style={styles.container}>
@@ -39,38 +65,12 @@ export const AlertScreen: React.FC = () => {
       </Text>
       <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} />
 
-      {/* Weather Alert */}
+      {/* Weather Alerts */}
       {loading ? (
         <View style={styles.loadingContainer}>
           <Text style={{ color: 'white' }}>Loading...</Text>
         </View>
-      ) : (
-        <View style={styles.alertContainer}>
-          <Text style={styles.alertTitle}>{alertData.headline}</Text>
-          <Text style={styles.alertCategory}>{alertData.category}</Text>
-          <Text style={styles.alertDesc}>{alertData.desc}</Text>
-          <Text style={styles.alertTime}>{`Effective: ${alertData.effective} - Expires: ${alertData.expires}`}</Text>
-
-          {/* Map Component */}
-          <View style={styles.mapContainer}>
-            <MapView
-              style={styles.map}
-              initialRegion={{
-                latitude: affectedArea[0].latitude,
-                longitude: affectedArea[0].longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            >
-              <Polygon
-                coordinates={affectedArea}
-                fillColor="rgba(255, 0, 0, 0.3)"
-                strokeColor="rgba(255, 0, 0, 0.5)"
-              />
-            </MapView>
-          </View>
-        </View>
-      )}
+      ) : renderAlerts()}
     </View>
   );
 };
@@ -81,6 +81,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: '100%',
     width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   background: {
     position: "absolute",
@@ -107,7 +109,6 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 20,
     right: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     padding: 20,
     borderRadius: 10,
     shadowColor: '#000',
@@ -115,7 +116,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
-    marginBottom: 120, // Adjusted to accommodate the map
+    marginBottom: 120,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)', // Adjust the alpha value for opacity
+    backdropFilter: 'blur(10px)', // Apply a blur effect
+  },
+  backgroundImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
   },
   alertTitle: {
     fontSize: 20,
