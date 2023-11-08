@@ -86,17 +86,17 @@ const styles = StyleSheet.create({
   locationText: {
     color: "white",
     textAlign: "center",
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
     marginBottom: 30,
   },
   regionText: {
-    color: "#A5B1C2",
+    color: 'white',
     fontSize: 16,
     fontWeight: "600",
   },
   countryText: {
-    color: "#A5B1C2",
+    color: "white",
     fontSize: 16,
     fontWeight: "600",
   },

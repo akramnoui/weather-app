@@ -1,46 +1,97 @@
-
-import React, { useCallback, useEffect } from "react";
-import { Dimensions, View, Image, SafeAreaView, TextInput, Platform, StatusBar as StatusB, StyleSheet, TouchableOpacity, Text, ScrollView } from "react-native";
-import { debounce } from "lodash";
-import { StatusBar } from "expo-status-bar";
-import { theme } from "../theme";
-import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
-import { CalendarDaysIcon, MapPinIcon } from "react-native-heroicons/solid";
-import { featchLocations, featchWeatherForescast } from "../api/weather";
-import { weatherImages, weatherPT } from "../constants";
-import * as Progress from "react-native-progress";
-import { getData, storageData } from "../storage/asyncStorage";
-import { Location, Weather, WeatherImages, WeatherPT } from "../util/types";
-
-
-import SearchBar from "../components/home/SearchBar";
-import WeatherInfo from "../components/home/WeatherInfo";
-import DailyForecast from "../components/home/DailyForecast";
+import React, { useEffect, useState } from "react";
+import { View, Image, StyleSheet, Text, ScrollView } from "react-native";
+import MapView, { Polygon } from 'react-native-maps';
+import { getData } from "../storage/asyncStorage";
+import { PREFERRED_CITIES_KEY } from "./Preferences";
+import { fetchWeatherAlerts } from "../api/weather";
+import WeatherAlert from "../components/alert/WeatherAlert";
+import { useMainCtx } from "../context/MainContext";
+import { Loader } from "../components/misc/Loader";
 
 export const AlertScreen: React.FC = () => {
-  const [showSearch, toggleSearch] = React.useState(false);
-  const [locations, setLocation] = React.useState([]);
-  const [weather, setWeather] = React.useState<Weather>({} as Weather);
-  const [loading, setLoading] = React.useState(true);
+  const [weatherAlerts, setWeatherAlerts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const {prefferedCities, restoredPreferences} = useMainCtx()
 
- 
+
+  useEffect(() => {
+    const fetchWeatherAlertsForCities = async () => {
+      try {
+        const preferredLocationsString = prefferedCities;
+        if (preferredLocationsString) {
+          const preferredLocations = JSON.parse(preferredLocationsString);
+          console.log(preferredLocations);
+
+         // Fetch alerts for all cities
+          const alerts = await Promise.all(preferredLocations.map(async (location: { name: string }) => {
+            const alert = await fetchWeatherAlerts({ cityName: location.name });
+            if (alert.alerts.alert.length > 0) {
+              return { city: location.name, alerts: alert.alerts.alert, coordinates: location.coordinates };
+            } else {
+              return null; // Filter out cities with no alerts
+            }
+          }));
+
+          // Remove null values from the alerts array
+          const filteredAlerts = alerts.filter(alert => alert !== null);
+
+          console.log('filtered alerts', filteredAlerts);
+          setWeatherAlerts(filteredAlerts);
+        }
+      } catch (error) {
+        console.error("Error fetching weather alerts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWeatherAlertsForCities();
+  }, [restoredPreferences]);
+
+  const renderAlerts = () => {
+    if (weatherAlerts.length > 0) {
+      return (
+        <ScrollView style={{paddingBottom: 100}}>
+          {weatherAlerts.map((cityAlerts, index) => (
+            // Use the WeatherAlert component here
+            <WeatherAlert key={index} cityAlerts={cityAlerts} />
+          ))}
+        </ScrollView>
+      );
+    }
+    // Your existing code for no alerts
+  };
+
+
+  if(!restoredPreferences){
+    return <Loader/>;
+  }
+
   return (
     <View style={styles.container}>
-      <StatusBar style="light" /> 
       <Text style={styles.locationText}>
         Alertes meteo
       </Text>
       <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} />
+
+      {/* Weather Alerts */}
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <Text style={{ color: 'white' }}>Loading...</Text>
+        </View>
+      ) : renderAlerts()}
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
     height: '100%',
     width: '100%',
-
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   background: {
     position: "absolute",
@@ -49,7 +100,6 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -62,5 +112,56 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 30,
+  },
+  alertContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+    marginBottom: 120,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)', // Adjust the alpha value for opacity
+    backdropFilter: 'blur(10px)', // Apply a blur effect
+  },
+  backgroundImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+  },
+  alertTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  alertCategory: {
+    fontSize: 16,
+    color: '#555',
+    marginBottom: 10,
+  },
+  alertDesc: {
+    fontSize: 14,
+    marginBottom: 10,
+    color: '#333',
+  },
+  alertTime: {
+    fontSize: 12,
+    color: '#777',
+  },
+  mapContainer: {
+    height: 200,
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginTop: 10,
+  },
+  map: {
+    flex: 1,
   },
 });
