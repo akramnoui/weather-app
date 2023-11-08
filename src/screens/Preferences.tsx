@@ -1,17 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  Dimensions,
   View,
   Image,
   SafeAreaView,
-  TextInput,
-  Platform,
-  StatusBar as StatusB,
   StyleSheet,
   TouchableOpacity,
   Text,
   ScrollView,
-  Animated,
   TouchableWithoutFeedback,
 } from "react-native";
 import { debounce } from "lodash";
@@ -21,12 +16,13 @@ import { featchLocations, featchWeatherForescast } from "../api/weather";
 import SearchBar from "../components/home/SearchBar";
 import { weatherImages } from "../constants";
 import { getData, storageData } from "../storage/asyncStorage";
-import Swipeout from "react-native-swipeout";
-import { useSharedValue, withSpring } from "react-native-reanimated";
+import { NavigationKey } from "../navigation/NavigationKey";
+import { useMainCtx } from "../context/MainContext";
+import { Loader } from "../components/misc/Loader";
 
 export const PREFERRED_CITIES_KEY = "preferredCities"; // AsyncStorage key for storing preferred cities
 
-export const Preferences: React.FC = () => {
+export const Preferences: React.FC = ({ navigation }) => {
 
   interface City {
     name: string;
@@ -38,12 +34,16 @@ export const Preferences: React.FC = () => {
   const [locations, setLocation] = useState([]);
   const [weather, setWeather] = useState<Weather>({} as Weather);
   const [loading, setLoading] = useState(true);
+  const {prefferedCities, SetPrefferedCities, restoredPreferences} = useMainCtx()
+
 
   useEffect(() => {
     // Load preferred cities from cache on component mount
+
     const loadPreferredCities = async () => {
+
       try {
-        const storedCities = await getData(PREFERRED_CITIES_KEY);
+        const storedCities = prefferedCities;
 
         if (storedCities) {
           setSelectedCities(JSON.parse(storedCities));
@@ -52,13 +52,15 @@ export const Preferences: React.FC = () => {
         console.error("Error loading preferred cities from cache:", error);
       }
     };
+    if(restoredPreferences){
 
     loadPreferredCities();
-  }, []);
+    }
+  }, [restoredPreferences]);
 
   const savePreferredCitiesToCache = async (cities: any[]) => {
     try {
-      await storageData(PREFERRED_CITIES_KEY, JSON.stringify(cities));
+      SetPrefferedCities(JSON.stringify(cities));
     } catch (error) {
       console.error("Error saving preferred cities to cache:", error);
     }
@@ -105,6 +107,9 @@ export const Preferences: React.FC = () => {
 
   const handleTextDebounce = useCallback(debounce((value: string) => handleSearch(value), 1200), []);
 
+  if(!restoredPreferences){
+    return <Loader/>;
+  }
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
@@ -130,6 +135,7 @@ export const Preferences: React.FC = () => {
             condition={city.condition}
             onRemove={() => removeCity(index)}
             toggleSearch={toggleSearch}
+            navigation={navigation}
           />
         ))}
       </ScrollView>
@@ -146,20 +152,19 @@ const WeatherCard: React.FC<{
   condition: string;
   onRemove: () => void;
   toggleSearch: any;
-}> = ({ city, temperature, condition, onRemove, toggleSearch }) => {
-  const translateX = useSharedValue(0);
+  navigation: any;
+}> = ({ city, temperature, condition, toggleSearch, navigation }) => {
+  const {setCity} = useMainCtx();
 
-  const handleSwipe = () => {
-    translateX.value = withSpring(-100, {}, () => {
-      // runOnJS(onRemove)();
-    });
-  };
-
+  const onCradPress = () =>{
+    toggleSearch(false)
+    setCity(city.name);
+    navigation.navigate(NavigationKey.HomeScreen)  }
+    
   return (
-   
       <><TouchableOpacity
       style={styles2.mainContainer}
-      onPress={() => toggleSearch(false)} // You can handle other actions here
+      onPress={onCradPress} // You can handle other actions here
     >
       <View style={styles2.weatherCard}>
         <Text style={styles2.cityText}>{city.name}</Text>

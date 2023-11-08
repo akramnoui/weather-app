@@ -5,15 +5,19 @@ import { getData } from "../storage/asyncStorage";
 import { PREFERRED_CITIES_KEY } from "./Preferences";
 import { fetchWeatherAlerts } from "../api/weather";
 import WeatherAlert from "../components/alert/WeatherAlert";
+import { useMainCtx } from "../context/MainContext";
+import { Loader } from "../components/misc/Loader";
 
 export const AlertScreen: React.FC = () => {
   const [weatherAlerts, setWeatherAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const {prefferedCities, restoredPreferences} = useMainCtx()
+
 
   useEffect(() => {
     const fetchWeatherAlertsForCities = async () => {
       try {
-        const preferredLocationsString = await getData(PREFERRED_CITIES_KEY);
+        const preferredLocationsString = prefferedCities;
         if (preferredLocationsString) {
           const preferredLocations = JSON.parse(preferredLocationsString);
           console.log(preferredLocations);
@@ -42,7 +46,7 @@ export const AlertScreen: React.FC = () => {
     };
 
     fetchWeatherAlertsForCities();
-  }, []);
+  }, [restoredPreferences]);
 
   const renderAlerts = () => {
     if (weatherAlerts.length > 0) {
@@ -57,6 +61,11 @@ export const AlertScreen: React.FC = () => {
     }
     // Your existing code for no alerts
   };
+
+
+  if(!restoredPreferences){
+    return <Loader/>;
+  }
 
   return (
     <View style={styles.container}>

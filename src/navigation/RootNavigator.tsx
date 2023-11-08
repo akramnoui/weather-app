@@ -1,28 +1,27 @@
-import { NavigatorScreenParams } from '@react-navigation/core';
-import { NavigationContainer } from '@react-navigation/native';
+import { type NavigatorScreenParams } from '@react-navigation/core'
+import { NavigationContainer } from '@react-navigation/native'
 import {
   createStackNavigator,
-  StackNavigationOptions,
-} from '@react-navigation/stack';
-import { useMemo, FC } from 'react';
+  type StackNavigationOptions
+} from '@react-navigation/stack'
+import React, { useMemo, type FC } from 'react'
 
-import { MainTabNavigator, MainTabParamList } from './MainTabNavigator';
-import { NavigationKey } from './NavigationKey';
+import { MainTabNavigator, type MainTabParamList } from './MainTabNavigator'
+import { NavigationKey } from './NavigationKey'
+import { MainContextProvider } from '../context/MainContext'
 
-export type RootStackParamList = {
-  [NavigationKey.MainTabNavigator]: NavigatorScreenParams<MainTabParamList>;
-};
+export interface RootStackParamList {
+  [NavigationKey.MainTabNavigator]: NavigatorScreenParams<MainTabParamList>
+}
 
-export const Stack = createStackNavigator<RootStackParamList>();
+export const Stack = createStackNavigator<RootStackParamList>()
 
 const rootScreenOptions: StackNavigationOptions = {
-  headerShown: false,
-};
+  headerShown: false
+}
 
 const RootNavigator: FC = () => {
-
   const screens = useMemo<JSX.Element>(() => {
-
     return (
       <>
         <Stack.Group>
@@ -38,18 +37,23 @@ const RootNavigator: FC = () => {
           />
         </Stack.Group> */}
       </>
-    );
-  }, []);
+    )
+  }, [])
 
   return (
-    <Stack.Navigator screenOptions={rootScreenOptions}>
-      {screens}
-    </Stack.Navigator>
-  );
-};
+    <MainContextProvider>
+
+      <Stack.Navigator screenOptions={rootScreenOptions}>
+        {screens}
+      </Stack.Navigator>
+
+   </MainContextProvider>
+
+  )
+}
 
 export default () => (
   <NavigationContainer>
     <RootNavigator />
   </NavigationContainer>
-);
+)
