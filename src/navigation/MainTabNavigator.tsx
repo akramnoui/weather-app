@@ -49,10 +49,17 @@ import React from 'react';
           component={Preferences}
         />
 
+<<<<<<< HEAD
         <Tab.Screen
           name={NavigationKey.Settings}
           component={HomeScreen}
         />
+=======
+        {/* <Tab.Screen
+          name={NavigationKey.Preferences}
+          component={Preferences}
+        /> */}
+>>>>>>> 74570b8 (fix: fixed error)
       </Tab.Navigator>
     );
   };

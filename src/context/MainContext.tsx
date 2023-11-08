@@ -22,7 +22,7 @@ import {
     children,
   }) => {
     const [city, setCity, restored] =
-    usePersistStorage<string>('@city', 'Paris');
+    usePersistStorage<string>('@city', 'Dublin');
 
     const [prefferedCities, SetPrefferedCities, restoredPreferences] =
     usePersistStorage<string[]>('@preferred', []);
