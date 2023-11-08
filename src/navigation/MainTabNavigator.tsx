@@ -49,10 +49,10 @@ import React from 'react';
           component={Preferences}
         />
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name={NavigationKey.Preferences}
           component={Preferences}
-        />
+        /> */}
       </Tab.Navigator>
     );
   };
