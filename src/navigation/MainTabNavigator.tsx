@@ -16,6 +16,8 @@ import React from 'react';
   export type MainTabParamList = {
     [NavigationKey.HomeScreen]: undefined;
     [NavigationKey.AlertScreen]: undefined;
+    [NavigationKey.Preferences]: undefined;
+
   };
   
   //if we need to take navigation prop and use it in this componennt
@@ -43,6 +45,11 @@ import React from 'react';
           component={AlertScreen}
         />
          <Tab.Screen
+          name={NavigationKey.Preferences}
+          component={Preferences}
+        />
+
+        <Tab.Screen
           name={NavigationKey.Preferences}
           component={Preferences}
         />
