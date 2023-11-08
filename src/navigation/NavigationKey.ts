@@ -3,5 +3,7 @@ export enum NavigationKey {
     HomeScreen = 'HomeScreen',
     AlertScreen = 'AlertScreen',
     Preferences = 'Preferences',
+    Settings = 'Settings'
+
 
 }
