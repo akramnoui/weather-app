@@ -50,8 +50,8 @@ import React from 'react';
         />
 
         <Tab.Screen
-          name={NavigationKey.Preferences}
-          component={Preferences}
+          name={NavigationKey.Settings}
+          component={HomeScreen}
         />
       </Tab.Navigator>
     );
