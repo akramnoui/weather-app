@@ -5,6 +5,17 @@ import { NavigationKey } from '../../navigation/NavigationKey';
 import { sizes } from '../../theme/sizes';
 import React from 'react';
 
+import Icon2 from 'react-native-vector-icons/FontAwesome'; 
+const SettingsIcon = () => {
+  return (
+    <View>
+      <Icon name="cog" size={30} color="black" /> {}
+    </View>
+  );
+};
+
+export default SettingsIcon;
+
 interface Props {
   focused: boolean;
   color: string;
@@ -16,6 +27,7 @@ const iconMapper: { [key: string]: string } = {
   [NavigationKey.HomeScreen]: 'home',
   [NavigationKey.AlertScreen]: 'alert',
   [NavigationKey.Preferences]: 'format-list-bulleted',
+  [NavigationKey.Settings]: 'cog',
 
 };
 
