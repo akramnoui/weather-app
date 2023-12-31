@@ -4,7 +4,7 @@ import {
   } from '@react-navigation/bottom-tabs';
   import { CompositeScreenProps } from '@react-navigation/native';
   import { StackScreenProps } from '@react-navigation/stack';
-  import { StyleSheet } from 'react-native';
+  import { Settings, StyleSheet } from 'react-native';
   
   import { HomeScreen, AlertScreen, Preferences} from '../screens';
 //   import { Theme } from '../theme/main';
@@ -12,11 +12,16 @@ import {
   import { RootStackParamList } from './RootNavigator';
 import { TabIcon } from '../components/navigation/TabIcon';
 import React from 'react';
+import Threshold_Settings from '../screens/Threshold_Settings';
+
+
+
   
   export type MainTabParamList = {
     [NavigationKey.HomeScreen]: undefined;
     [NavigationKey.AlertScreen]: undefined;
     [NavigationKey.Preferences]: undefined;
+    [NavigationKey.Threshold_Settings]: undefined;
 
   };
   
@@ -50,8 +55,8 @@ import React from 'react';
         />
 
         <Tab.Screen
-          name={NavigationKey.Settings}
-          component={HomeScreen}
+          name={NavigationKey.Threshold_Settings}
+          component={Threshold_Settings}
         />
       </Tab.Navigator>
     );
