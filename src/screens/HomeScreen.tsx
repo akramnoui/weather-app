@@ -15,6 +15,9 @@ import DailyForecast from '../components/home/DailyForecast'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { useMainCtx } from '../context/MainContext'
 import { Loader } from '../components/misc/Loader'
+import { addDoc, collection } from 'firebase/firestore'
+import { firestore } from '../../firebaseConfig'
+import * as Notifications from 'expo-notifications';
 
 // ... (other imports)
 
@@ -27,15 +30,25 @@ export const HomeScreen: React.FC = () => {
 
   const {city , setCity, restored} = useMainCtx();
 
+  const executeRequest = async () => {
+    const token = (await Notifications.getDevicePushTokenAsync()).data;
+    return token;
+  }
   useEffect(() => {
     // Determine if it's daytime or nighttime based on the current time
-    const currentHour = new Date().getHours()
-    setIsDaytime(currentHour >= 6 && currentHour < 18)
-    if(restored){
-      fetchMyWeatherData()
-
-    }
-  }, [restored, city])
+    const currentHour = new Date().getHours();
+    setIsDaytime(currentHour >= 6 && currentHour < 18);
+  
+    const fetchData = async () => {
+      if (restored) {
+        const token = await executeRequest();
+        addDoc(collection(firestore, 'weather'), { title: 'test', token: token });
+        fetchMyWeatherData();
+      }
+    };
+  
+    fetchData();
+  }, [restored, city]);
 
   const daytimeGradient = 'linear-gradient(167deg, #29B2DD 0%, #3AD 47.38%, #2DC8EA 100%)'
   const nighttimeGradient = 'linear-gradient(167deg, #08244F 0%, #134CB5 47.38%, #0B42AB 100%)'
