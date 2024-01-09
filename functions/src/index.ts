@@ -8,26 +8,28 @@
  */
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import sendPushNotification from "./sendPushNotification";
 
 
 admin.initializeApp();
 
 export const sendPushNotificationOnWeatherAdd = functions.firestore
   .document("weather/{weatherId}")
-  .onCreate(async (snap) => {
-    const data = snap.data();
+  .onCreate(async () => {
+    // const data = snap.data();
 
-    // Ensure the document has an expoPushToken
-    if (!data.expoPushToken) {
-      console.error("expoPushToken not found in the document.");
-      return null;
-    }
+    // // Ensure the document has an expoPushToken
+    // if (!data.expoPushToken) {
+    //   console.error("expoPushToken not found in the document.");
+    //   return null;
+    // }
 
     // Send push notification
-    // await sendPushNotification({
-    //   pushToken: "ExponentPushToken[O_yw9_KnGeZyFHQB455T1T]",
-    //   message: "Hello... is this thing working?",
-    // });
+    const res = await sendPushNotification({
+      pushToken: "ExponentPushToken[6bDPBYIad_zmhOHF-mt2gm]",
+      message: "Hello... is this thing working?",
+    });
+    functions.logger.log("respooonse ++++++++", res);
 
     return null;
   });
