@@ -11,7 +11,7 @@ import {
     city: string;
     setCity: any;
     restored: boolean;
-    prefferedCities: any;
+    prefferedCities: any[];
     SetPrefferedCities: any; 
     restoredPreferences: any;
   };
