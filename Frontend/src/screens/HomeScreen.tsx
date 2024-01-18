@@ -15,9 +15,10 @@ import DailyForecast from '../components/home/DailyForecast'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { useMainCtx } from '../context/MainContext'
 import { Loader } from '../components/misc/Loader'
-import { addDoc, collection } from 'firebase/firestore'
-import { firestore } from '../../firebaseConfig'
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
+import { auth, firestore } from '../../firebaseConfig'
 import * as Notifications from 'expo-notifications';
+import useFirebaseAuth from '../api/useFirebaseAuth'
 
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(true)
@@ -26,26 +27,38 @@ export const HomeScreen: React.FC = () => {
   const [loading, setLoading] = React.useState(true)
   const [isDaytime, setIsDaytime] = React.useState(true)
 
-  const {city , setCity, restored} = useMainCtx();
+
+  const {city , setCity, restored, uid, setUid, restoredUid} = useMainCtx();
 
   const executeRequest = async () => {
-    const token = (await Notifications.getDevicePushTokenAsync()).data;
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
     return token;
   }
+  // Custom hook usage
+  useFirebaseAuth();
   useEffect(() => {
     // Determine if it's daytime or nighttime based on the current time
     const currentHour = new Date().getHours();
     setIsDaytime(currentHour >= 6 && currentHour < 18);
-  
+
     const fetchData = async () => {
       if (restored) {
+        // Fetch the notification token only if it hasn't been fetched yet
+        const token = await executeRequest();
+
+        // Now you can use the token as needed, for example, save it to Firestore
+        if (uid) {
+          const userDocRef = doc(collection(firestore, "users"), uid);
+          await setDoc(userDocRef, { notificationToken: token }, { merge: true });
+        }
+
+        // Continue with other data fetching or processing
         fetchMyWeatherData();
       }
-
     };
-  
+
     fetchData();
-  }, [restored, city]);
+  }, [restored, city, uid]);
 
   const daytimeGradient = 'linear-gradient(167deg, #29B2DD 0%, #3AD 47.38%, #2DC8EA 100%)'
   const nighttimeGradient = 'linear-gradient(167deg, #08244F 0%, #134CB5 47.38%, #0B42AB 100%)'

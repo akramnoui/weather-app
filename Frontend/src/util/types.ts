@@ -3,6 +3,8 @@ type Location = {
     country: string;
     cityName: string;
     region: string;
+    lat: string;
+    long: string;
   };
   
   type Weather = {

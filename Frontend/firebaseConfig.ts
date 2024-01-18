@@ -1,4 +1,5 @@
 import { getFirestore } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
 
 
@@ -20,6 +21,9 @@ const firebaseConfig = {
 
 
 export const firestore = getFirestore(app);
+export const auth = getAuth(app);
+export const authListener = onAuthStateChanged;
+export const signIn = signInAnonymously;
 
 // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase

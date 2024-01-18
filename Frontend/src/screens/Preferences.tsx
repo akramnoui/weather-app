@@ -19,6 +19,8 @@ import { getData, storageData } from "../storage/asyncStorage";
 import { NavigationKey } from "../navigation/NavigationKey";
 import { useMainCtx } from "../context/MainContext";
 import { Loader } from "../components/misc/Loader";
+import { firestore } from "../../firebaseConfig";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 
 export const PREFERRED_CITIES_KEY = "preferredCities"; // AsyncStorage key for storing preferred cities
 
@@ -34,7 +36,7 @@ export const Preferences: React.FC = ({ navigation }) => {
   const [locations, setLocation] = useState([]);
   const [weather, setWeather] = useState<Weather>({} as Weather);
   const [loading, setLoading] = useState(true);
-  const {prefferedCities, SetPrefferedCities, restoredPreferences} = useMainCtx()
+  const {prefferedCities, SetPrefferedCities, restoredPreferences, uid} = useMainCtx()
 
 
   useEffect(() => {
@@ -66,29 +68,44 @@ export const Preferences: React.FC = ({ navigation }) => {
     }
   };
   
-  const handleLocation = (item: Location) => {
+  const handleLocation = async (item: Location) => {
     setLocation([]);
     toggleSearch(false);
     setLoading(true);
-    featchWeatherForescast({
-      cityName: item.name,
-      days: "7",
-    })
-      .then((data) => {
+  
+    try {
+      // Fetch the user document reference based on the UID
+      const userDocRef = doc(firestore, "users", uid);
+  
+      // Get the user document to check if it exists
+      const data = await featchWeatherForescast({
+        cityName: item.name,
+        days: "7",
+      })
+  
+        // Proceed with the rest of the function
         const newCity = {
           name: item.name,
-          coordinates: {lat: item.lat, long: item.long},
+          coordinates: { lat: item.lat, long: item.long },
           temperature: data.current.temp_c,
           condition: data.current.condition.text,
         };
+  
+        // Add the new city data to the 'cities' subcollection
+        const citiesCollectionRef = collection(userDocRef, "cities");
+        await addDoc(citiesCollectionRef, {name : newCity.name});
+  
         const updatedCities = [...selectedCities, newCity];
         setSelectedCities(updatedCities);
         savePreferredCitiesToCache(updatedCities); // Save to cache
+
+        console.log("User document does not exist");
         setLoading(false);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      
+    } catch (error) {
+      console.error("Error fetching user document:", error);
+      setLoading(false);
+    }
   };
 
   const removeCity = (index: number) => {
