@@ -46,7 +46,7 @@ export const Preferences: React.FC = ({ navigation }) => {
         const storedCities = prefferedCities;
 
         if (storedCities) {
-          setSelectedCities(JSON.parse(storedCities));
+          setSelectedCities(storedCities);
         }
       } catch (error) {
         console.error("Error loading preferred cities from cache:", error);
@@ -60,7 +60,7 @@ export const Preferences: React.FC = ({ navigation }) => {
 
   const savePreferredCitiesToCache = async (cities: any[]) => {
     try {
-      SetPrefferedCities(JSON.stringify(cities));
+      SetPrefferedCities(cities);
     } catch (error) {
       console.error("Error saving preferred cities to cache:", error);
     }

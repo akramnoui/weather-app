@@ -19,8 +19,6 @@ import { addDoc, collection } from 'firebase/firestore'
 import { firestore } from '../../firebaseConfig'
 import * as Notifications from 'expo-notifications';
 
-// ... (other imports)
-
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(true)
   const [locations, setLocation] = React.useState([])
@@ -41,10 +39,9 @@ export const HomeScreen: React.FC = () => {
   
     const fetchData = async () => {
       if (restored) {
-        const token = await executeRequest();
-        addDoc(collection(firestore, 'weather'), { title: 'test', token: token });
         fetchMyWeatherData();
       }
+
     };
   
     fetchData();
@@ -87,7 +84,6 @@ export const HomeScreen: React.FC = () => {
       if(city){
 
       const cityName = city;
-      
       const data = await featchWeatherForescast({
         cityName,
         days: '7'
@@ -109,8 +105,7 @@ export const HomeScreen: React.FC = () => {
 
   const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
 
-  console.log(restored);
-  console.log(city);
+
   if(!restored){
     return <Loader/>;
   }
