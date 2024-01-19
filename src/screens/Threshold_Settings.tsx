@@ -9,13 +9,12 @@ const Threshold: React.FC = () => {
   const [precipitationLevel, setPrecipitationLevel] = useState(0);
   const [humidityLevel, setHumidityLevel] = useState(0);
 
-  const windSpeedStep = 0.5;
-  const temperatureStep = 0.5;
+  const windSpeedStep = 1;
+  const temperatureStep = 1;
   const precipitationLevelStep = 10;
-  const humidityLevelStep = 10;
+  const humidityLevelStep = 1;
 
   const handleSaveThresholds = () => {
-    // Logique pour enregistrer les seuils choisis
     console.log('Seuils enregistrés :', { windSpeed, temperature, precipitationLevel, humidityLevel });
   };
 
@@ -88,13 +87,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#82a0f1', // Couleur de fond
+    backgroundColor: '#82a0f1', 
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#fff', // Couleur du texte
+    color: '#fff', 
   },
   sliderContainer: {
     flexDirection: 'row',
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginLeft: 8,
-    color: '#fff', // Couleur du texte
+    color: '#fff', 
   },
   saveButton: {
     backgroundColor: 'blue',
