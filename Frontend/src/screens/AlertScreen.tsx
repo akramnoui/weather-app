@@ -5,21 +5,21 @@ import { getData } from "../storage/asyncStorage";
 import { PREFERRED_CITIES_KEY } from "./Preferences";
 import { fetchWeatherAlerts } from "../api/weather";
 import WeatherAlert from "../components/alert/WeatherAlert";
+import { useMainCtx } from "../context/MainContext";
+import { Loader } from "../components/misc/Loader";
 
 export const AlertScreen: React.FC = () => {
   const [weatherAlerts, setWeatherAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const {prefferedCities, restoredPreferences} = useMainCtx()
+
 
   useEffect(() => {
     const fetchWeatherAlertsForCities = async () => {
       try {
-        const preferredLocationsString = await getData(PREFERRED_CITIES_KEY);
-        if (preferredLocationsString) {
-          const preferredLocations = JSON.parse(preferredLocationsString);
-          console.log(preferredLocations);
-
+        if (restoredPreferences && prefferedCities) {
          // Fetch alerts for all cities
-          const alerts = await Promise.all(preferredLocations.map(async (location: { name: string }) => {
+          const alerts = await Promise.all(prefferedCities.map(async (location: { name: string, coordinates: {lat : string, long: string} }) => {
             const alert = await fetchWeatherAlerts({ cityName: location.name });
             if (alert.alerts.alert.length > 0) {
               return { city: location.name, alerts: alert.alerts.alert, coordinates: location.coordinates };
@@ -41,8 +41,9 @@ export const AlertScreen: React.FC = () => {
       }
     };
 
-    fetchWeatherAlertsForCities();
-  }, []);
+  fetchWeatherAlertsForCities();
+}, [restoredPreferences, prefferedCities]);
+
 
   const renderAlerts = () => {
     if (weatherAlerts.length > 0) {
@@ -58,13 +59,22 @@ export const AlertScreen: React.FC = () => {
     // Your existing code for no alerts
   };
 
+
+  if(!restoredPreferences){
+    return <Loader/>;
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.locationText}>
         Alertes meteo
       </Text>
       <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} />
-
+      {weatherAlerts.length === 0 && (
+          <Text style={styles.noAlertText}>
+          Il n'y a actuellement aucune alerte dans vos villes favorites 
+        </Text>
+      )}
       {/* Weather Alerts */}
       {loading ? (
         <View style={styles.loadingContainer}>
@@ -88,6 +98,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     height: "100%",
+
   },
   loadingContainer: {
     flex: 1,
@@ -103,6 +114,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 30,
+  },
+  noAlertText: {
+    color: "white",
+    textAlign: "center",
+    alignSelf: 'center',
+    top: 50,
+    zIndex: 1,
+    fontSize: 20,
+    fontWeight: "normal",
+    marginBottom: 30,
+    paddingHorizontal: 50,
   },
   alertContainer: {
     position: 'absolute',

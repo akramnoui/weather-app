@@ -34,7 +34,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ weather, weatherImages })
               </Text>
               <Text style={styles.forecastTemperatureText}>
                 {" "}
-                {item?.day.avgtemp_c}&#176;
+                {Math.round(item?.day.avgtemp_c)}&#176;
               </Text>
             </View>
           );
