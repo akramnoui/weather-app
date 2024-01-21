@@ -42,7 +42,9 @@ const generatePushNotificationsToken = async (): Promise<
     return undefined;
   }
  
-  const { data } = await getExpoPushTokenAsync();
+  const { data } = await getExpoPushTokenAsync({
+    projectId: '51770aa0-6c4c-4d92-8d17-e37bc8b1ce1c'
+ });
  
   return data;
 };
