@@ -21,7 +21,7 @@ import {
   export const [useMainCtx, MainContext] = createCtx<MainContextType>();
 
 export const MainContextProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
-  const [city, setCity, restored] = usePersistStorage<string>('@city', 'Dublin');
+  const [city, setCity, restored] = usePersistStorage<string>('@city', 'Paris');
   const [prefferedCities, SetPrefferedCities, restoredPreferences] = usePersistStorage<string[]>('@preferred', []);
   const [uid, setUid, restoredUid] = usePersistStorage<string | null>('@uid', null); // Persist UID in local storage
 
