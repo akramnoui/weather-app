@@ -31,7 +31,9 @@ export const HomeScreen: React.FC = () => {
   const {city , setCity, restored, uid, setUid, restoredUid} = useMainCtx();
 
   const executeRequest = async () => {
-    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    const token = (await Notifications.getExpoPushTokenAsync({
+      projectId: '51770aa0-6c4c-4d92-8d17-e37bc8b1ce1c'
+   })).data;
     return token;
   }
   // Custom hook usage
