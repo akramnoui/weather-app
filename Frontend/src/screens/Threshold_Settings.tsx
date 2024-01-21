@@ -2,19 +2,32 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { collection, setDoc, doc } from 'firebase/firestore';
+import { firestore } from '../../firebaseConfig';
+import { useMainCtx } from '../context/MainContext';
 
 const Threshold: React.FC = () => {
   const [windSpeed, setWindSpeed] = useState(0);
   const [temperature, setTemperature] = useState(0);
   const [precipitationLevel, setPrecipitationLevel] = useState(0);
   const [humidityLevel, setHumidityLevel] = useState(0);
+  const {uid} = useMainCtx();
 
   const windSpeedStep = 1;
   const temperatureStep = 1;
   const precipitationLevelStep = 10;
   const humidityLevelStep = 1;
 
-  const handleSaveThresholds = () => {
+  const handleSaveThresholds = async () => {
+    // Create a reference to the "thresholds" subcollection for the current user
+    const thresholdsCollectionRef = collection(firestore, 'users', uid , 'thresholds');
+
+    // Set the thresholds data in the Firestore subcollection
+    await setDoc(doc(thresholdsCollectionRef, 'windSpeed'), { value: windSpeed });
+    await setDoc(doc(thresholdsCollectionRef, 'temperature'), { value: temperature });
+    await setDoc(doc(thresholdsCollectionRef, 'precipitationLevel'), { value: precipitationLevel });
+    await setDoc(doc(thresholdsCollectionRef, 'humidityLevel'), { value: humidityLevel });
+
     console.log('Seuils enregistrés :', { windSpeed, temperature, precipitationLevel, humidityLevel });
   };
 
