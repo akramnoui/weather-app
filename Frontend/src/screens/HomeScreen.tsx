@@ -98,15 +98,16 @@ export const HomeScreen: React.FC = () => {
   const fetchMyWeatherData = async () => {
 
     try {
-      if(city){
-      const cityName = city;
-      const data = await featchWeatherForescast({
-        cityName,
-        days: '7'
-      })
-      setWeather(data)
-      setLoading(false)
-    }
+      if (city) {
+
+        const cityName = city;
+        const data = await featchWeatherForescast({
+          cityName,
+          days: '7'
+        })
+        setWeather(data)
+        setLoading(false)
+      }
     } catch (error) {
       console.error('Error fetching weather data:', error)
       setLoading(false)

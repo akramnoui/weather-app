@@ -79,17 +79,26 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
         component={Preferences}
       />
 
-        <Tab.Screen
-         name={NavigationKey.Threshold_Settings}
-         component={Threshold_Settings}
-        />
-      </Tab.Navigator>
-    );
-  };
-  
-  const styles = StyleSheet.create({
-    tabBar: {
-      elevation: 0,
-      borderTopWidth: 0,
-    },
-  });
+      <Tab.Screen
+        name={NavigationKey.Threshold_Settings}
+        component={Threshold_Settings}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const styles = StyleSheet.create({
+  tabBar: {
+    elevation: 0,
+    borderTopWidth: 0,
+    backgroundColor: '#0B42AB',
+    borderTopWidth: 0.17,
+    borderBlockColor: 'gray',
+    borderCurve: 'circular'
+  },
+  linearGradient: {
+    flex: 1,
+    height: '100%',
+    width: '100%'
+  }
+});
