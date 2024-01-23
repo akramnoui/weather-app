@@ -28,12 +28,12 @@ export const HomeScreen: React.FC = () => {
   const [isDaytime, setIsDaytime] = React.useState(true)
 
 
-  const {city , setCity, restored, uid, setUid, restoredUid} = useMainCtx();
+  const { city, setCity, restored, uid, setUid, restoredUid } = useMainCtx();
 
   const executeRequest = async () => {
     const token = (await Notifications.getExpoPushTokenAsync({
       projectId: '51770aa0-6c4c-4d92-8d17-e37bc8b1ce1c'
-   })).data;
+    })).data;
     return token;
   }
   // Custom hook usage
@@ -96,16 +96,16 @@ export const HomeScreen: React.FC = () => {
   const fetchMyWeatherData = async () => {
 
     try {
-      if(city){
+      if (city) {
 
-      const cityName = city;
-      const data = await featchWeatherForescast({
-        cityName,
-        days: '7'
-      })
-      setWeather(data)
-      setLoading(false)
-    }
+        const cityName = city;
+        const data = await featchWeatherForescast({
+          cityName,
+          days: '7'
+        })
+        setWeather(data)
+        setLoading(false)
+      }
     } catch (error) {
       console.error('Error fetching weather data:', error)
       setLoading(false)
@@ -121,43 +121,43 @@ export const HomeScreen: React.FC = () => {
   const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
 
 
-  if(!restored){
-    return <Loader/>;
+  if (!restored) {
+    return <Loader />;
   }
 
   return (
     <View style={[styles.container]}>
       <StatusBar style="light" />
       <LinearGradient
-      colors={backgroundColors}
-      start={{ x: 0, y: 0.5 }}
-      end={{ x: 1, y: 0.5 }}
-      style={styles.background}
-    />
+        colors={backgroundColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.background}
+      />
       {loading
         ? (
-        <View style={styles.loadingContainer}>
-          <Progress.CircleSnail thickness={10} color="#0bb3b2" size={100} />
-        </View>
-          )
+          <View style={styles.loadingContainer}>
+            <Progress.CircleSnail thickness={10} color="#0bb3b2" size={100} />
+          </View>
+        )
         : (
 
-        <SafeAreaView style={{ height: '100%', width: '100%', justifyContent: 'space-around' }}>
+          <SafeAreaView style={{ height: '100%', width: '100%', justifyContent: 'space-around' }}>
 
-          <SearchBar
-            showSearch={showSearch}
-            toggleSearch={toggleSearch}
-            handleTextDebouce={handleTextDebouce}
-            locations={locations}
-            handleLocation={handleLocation}
-          />
-          <TouchableWithoutFeedback style={[{ height: '100%', paddingBottom: 20 }]} onPress={() => { toggleSearch(false) }}>
-          <WeatherInfo current={current} location={location} weatherImages={weatherImages} weatherPT={weatherPT} />
-          <DailyForecast weather={weather} weatherImages={weatherImages} />
-          </TouchableWithoutFeedback>
+            <SearchBar
+              showSearch={showSearch}
+              toggleSearch={toggleSearch}
+              handleTextDebouce={handleTextDebouce}
+              locations={locations}
+              handleLocation={handleLocation}
+            />
+            <TouchableWithoutFeedback style={[{ height: '100%', paddingBottom: 20 }]} onPress={() => { toggleSearch(false) }}>
+              <WeatherInfo current={current} location={location} weatherImages={weatherImages} weatherPT={weatherPT} />
+              <DailyForecast weather={weather} weatherImages={weatherImages} />
+            </TouchableWithoutFeedback>
 
-        </SafeAreaView>
-          )}
+          </SafeAreaView>
+        )}
     </View>
   )
 }
