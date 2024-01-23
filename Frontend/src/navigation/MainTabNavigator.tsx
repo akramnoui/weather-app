@@ -12,11 +12,13 @@ import {
   import { RootStackParamList } from './RootNavigator';
 import { TabIcon } from '../components/navigation/TabIcon';
 import React from 'react';
+import Threshold_Settings from '../screens/Threshold_Settings';
   
   export type MainTabParamList = {
     [NavigationKey.HomeScreen]: undefined;
     [NavigationKey.AlertScreen]: undefined;
     [NavigationKey.Preferences]: undefined;
+    [NavigationKey.Threshold_Settings]: undefined;
 
   };
   
@@ -49,10 +51,10 @@ import React from 'react';
           component={Preferences}
         />
 
-        {/* <Tab.Screen
-          name={NavigationKey.Preferences}
-          component={Preferences}
-        /> */}
+        <Tab.Screen
+                  name={NavigationKey.Threshold_Settings}
+                  component={Threshold_Settings}
+        />
       </Tab.Navigator>
     );
   };

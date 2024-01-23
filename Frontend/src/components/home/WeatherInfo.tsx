@@ -40,7 +40,7 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ current, location, weatherIma
       </View>
 
       <Text style={styles.temperatureText}>
-          {current?.temp_c}&#176;
+      {Math.round(current?.temp_c)}&#176;
         </Text>
         <Text style={styles.conditionText}>
           {weatherPT[current?.condition?.text]}
@@ -51,7 +51,7 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ current, location, weatherIma
           <View style={styles.detailItem}>
             <Image source={require("../../../assets/icons/wind.png")} style={styles.detailIcon} />
             <Text style={styles.detailText}>
-              {current?.wind_kph}km
+              {current?.wind_kph}km/h
             </Text>
           </View>
           <View style={styles.detailItem}>

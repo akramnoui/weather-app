@@ -14,29 +14,31 @@ import {
     prefferedCities: any[];
     SetPrefferedCities: any; 
     restoredPreferences: any;
+    uid: string | null; 
+    setUid: any;
+    restoredUid: boolean;
   };
-  
   export const [useMainCtx, MainContext] = createCtx<MainContextType>();
-  
-  export const MainContextProvider: FC<PropsWithChildren<{}>> = ({
-    children,
-  }) => {
-    const [city, setCity, restored] =
-    usePersistStorage<string>('@city', 'Dublin');
 
-    const [prefferedCities, SetPrefferedCities, restoredPreferences] =
-    usePersistStorage<string[]>('@preferred', []);
-  
-    const value = useMemo(
-      () => ({
-        city,
-        setCity,
-        restored,
-        prefferedCities, SetPrefferedCities, restoredPreferences
-      }),
-      [city, restored,  prefferedCities, restoredPreferences],
-    );
-  
-    return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
-  };
-  
+export const MainContextProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
+  const [city, setCity, restored] = usePersistStorage<string>('@city', 'Paris');
+  const [prefferedCities, SetPrefferedCities, restoredPreferences] = usePersistStorage<string[]>('@preferred', []);
+  const [uid, setUid, restoredUid] = usePersistStorage<string | null>('@uid', null); // Persist UID in local storage
+
+  const value = useMemo(
+    () => ({
+      city,
+      setCity,
+      restored,
+      prefferedCities,
+      SetPrefferedCities,
+      restoredPreferences,
+      uid,
+      setUid,
+      restoredUid
+    }),
+    [city, restored, prefferedCities, restoredPreferences, uid, setUid, restoredUid],
+  );
+
+  return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
+};

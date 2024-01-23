@@ -27,7 +27,7 @@ const iconMapper: { [key: string]: string } = {
   [NavigationKey.HomeScreen]: 'home',
   [NavigationKey.AlertScreen]: 'alert',
   [NavigationKey.Preferences]: 'format-list-bulleted',
-  [NavigationKey.Settings]: 'cog',
+  [NavigationKey.Threshold_Settings]: 'cog',
 
 };
 
