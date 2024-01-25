@@ -45,11 +45,13 @@ export const HomeScreen: React.FC = () => {
 
     const fetchData = async () => {
       if (restored) {
+        console.log(restored);
         // Fetch the notification token only if it hasn't been fetched yet
         const token = await executeRequest();
 
         // Now you can use the token as needed, for example, save it to Firestore
         if (uid) {
+          console.log(uid);
           const userDocRef = doc(collection(firestore, "users"), uid);
           await setDoc(userDocRef, { notificationToken: token }, { merge: true });
         }
@@ -97,7 +99,6 @@ export const HomeScreen: React.FC = () => {
 
     try {
       if(city){
-
       const cityName = city;
       const data = await featchWeatherForescast({
         cityName,

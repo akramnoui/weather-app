@@ -52,8 +52,8 @@ import Threshold_Settings from '../screens/Threshold_Settings';
         />
 
         <Tab.Screen
-                  name={NavigationKey.Threshold_Settings}
-                  component={Threshold_Settings}
+         name={NavigationKey.Threshold_Settings}
+         component={Threshold_Settings}
         />
       </Tab.Navigator>
     );
