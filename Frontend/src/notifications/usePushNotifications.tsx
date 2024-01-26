@@ -31,12 +31,13 @@ const usePushNotifications = (
 
   useEffect(() => {
     const setupPushNotifications = async () => {
-      notificationListener.current = addNotificationReceivedListener(setNotification);
-
-      responseListener.current = addNotificationResponseReceivedListener((response) =>
+ notificationListener.current = addNotificationReceivedListener(notification => {
+    setNotification(notification);
+  });
+      responseListener.current = addNotificationResponseReceivedListener(response => {
+        console.log(response);
         onTapNotification?.(response)
-      );
-
+      });
       if (Platform.OS === 'android') {
         await setNotificationChannelAsync('default', {
           name: 'default',

@@ -9,9 +9,12 @@ import React, { useMemo, type FC } from 'react'
 import { MainTabNavigator, type MainTabParamList } from './MainTabNavigator'
 import { NavigationKey } from './NavigationKey'
 import { MainContextProvider } from '../context/MainContext'
+import { ModalNavigator } from './ModalNavigator'
 
 export interface RootStackParamList {
   [NavigationKey.MainTabNavigator]: NavigatorScreenParams<MainTabParamList>
+  [NavigationKey.ModalNavigator]: NavigatorScreenParams<MainTabParamList>
+
 }
 
 export const Stack = createStackNavigator<RootStackParamList>()
@@ -30,12 +33,12 @@ const RootNavigator: FC = () => {
             component={MainTabNavigator}
           />
         </Stack.Group>
-        {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Group screenOptions={{ presentation: 'modal' }}>
           <Stack.Screen
             name={NavigationKey.ModalNavigator}
             component={ModalNavigator}
           />
-        </Stack.Group> */}
+        </Stack.Group>
       </>
     )
   }, [])
