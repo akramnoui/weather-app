@@ -17,19 +17,26 @@ const AlertSection: React.FC<AlertSectionProps> = ({ title, alerts }) => {
         alert.msgtype != "" ? (
           <View key={alertIndex} style={styles.alertContainer}>
             <Text style={styles.alertHeadline}>{alert.severity} {alert.event}</Text>
-            <Text style={styles.alertCategory}>{alert.category}</Text>
+            <Text style={styles.alertCategory}>
+              <Text style={{ color: 'white', fontWeight: "300", fontSize: 15 }}>Category: </Text>
+              {alert.category}
+            </Text>
+
+            <Text style={{ color: "white", fontSize: 15, fontWeight: "300" }}>
+              Areas concernerd
+            </Text>
 
             <View style={styles.areasContainer}>
               <ScrollView horizontal>
                 {alert.areas.split(";").map((area, areaIndex) => (
-                  <TouchableOpacity key={areaIndex}>
-                    <Text>{area}</Text>
+                  <TouchableOpacity key={areaIndex} style={styles.areaElement}>
+                    <Text style={{ fontWeight: "400", color: "#354A53" }}>{area}</Text>
                   </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
 
-            <Text style={styles.alertTime}>{`Effective: ${alert.effective} - Expires: ${alert.expires}`}</Text>
+            {/* <Text style={styles.alertTime}>{`Effective: ${alert.effective} - Expires: ${alert.expires}`}</Text> */}
           </View>
         ) : (null)
 
@@ -58,10 +65,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     marginBottom: 10,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowRadius: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
     elevation: 5,
+    borderBottomWidth: 0.4,
+    borderBottomColor: "#EDFCFF"
+    // backgroundColor: "white"
   },
   alertCategory: {
     fontSize: 18,
@@ -82,11 +92,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#71797E',
+    color: '#354A53',
   },
   areasContainer: {
-    flexDirection: "row", 
-    flexWrap: 'nowrap'
+    flexDirection: "row",
+    flexWrap: 'nowrap',
+    marginTop: 15,
+    marginBottom: 20
+  },
+  areaElement: {
+    backgroundColor: '#E9FCFF',
+    opacity: 0.8,
+    borderRadius: 30,
+    padding: 10,
+    marginHorizontal: 3
   }
 
 });
