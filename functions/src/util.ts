@@ -20,4 +20,3 @@ async (params: { cityName: string; days: string }) => {
   `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${params.cityName}&days=${params.days}&aqi=no&alerts=yes`;
   return apiCall(endpoint);
 };
-

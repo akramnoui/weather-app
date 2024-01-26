@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
   dailyForecastContainer: {
     marginBottom: 10,
     flexDirection: "column",
+    alignItems: 'center',
     justifyContent: "space-between",
   },
   forecastTitleContainer: {
