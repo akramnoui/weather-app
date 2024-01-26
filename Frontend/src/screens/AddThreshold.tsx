@@ -39,7 +39,7 @@ export const AddThreshold: React.FC = ({ navigation }) => {
         ...(selectedParams.includes('temperature') && { temperature }),
         ...(selectedParams.includes('precipitation') && { precipitationLevel }),
         ...(selectedParams.includes('humidity') && { humidityLevel }),
-        city: selectedCity,
+        city: selectedCity || 'Paris',
       };
 
       // Update the context array with the new threshold
@@ -63,6 +63,7 @@ export const AddThreshold: React.FC = ({ navigation }) => {
         // Reset state variables if needed
         setSelectedParams([]);
         setThresholdType('above');
+        navigation.goBack();
       } catch (error) {
         console.error('Error adding threshold document:', error);
       }
@@ -265,6 +266,8 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         width: '60%',
         alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
 
       },
       buttonText: {
