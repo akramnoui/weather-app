@@ -13,7 +13,6 @@ import { RootStackParamList } from './RootNavigator';
 import { TabIcon } from '../components/navigation/TabIcon';
 import React, { useEffect } from 'react';
 import Threshold_Settings from '../screens/Threshold_Settings';
-import { LinearGradient } from 'expo-linear-gradient';
 
 
 
@@ -69,17 +68,26 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
         component={Preferences}
       />
 
-        <Tab.Screen
-         name={NavigationKey.Threshold_Settings}
-         component={Threshold_Settings}
-        />
-      </Tab.Navigator>
-    );
-  };
-  
-  const styles = StyleSheet.create({
-    tabBar: {
-      elevation: 0,
-      borderTopWidth: 0,
-    },
-  });
+      <Tab.Screen
+        name={NavigationKey.Threshold_Settings}
+        component={Threshold_Settings}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const styles = (backgroundColors) => StyleSheet.create({
+  tabBar: {
+    elevation: 0,
+    borderTopWidth: 0,
+    borderTopWidth: 0.8,
+    backgroundColor: backgroundColors,
+    borderBlockColor: 'white',
+    borderCurve: 'circular'
+  },
+  linearGradient: {
+    flex: 1,
+    height: '100%',
+    width: '100%'
+  }
+});
