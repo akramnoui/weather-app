@@ -7,7 +7,7 @@ interface WeatherAlertProps {
   cityAlerts: {
     city: string;
     alerts: any[]; // Adjust the type based on your alert structure
-    coordinates: {lat: string, long: string};
+    coordinates: { lat: string, long: string };
   };
 }
 
@@ -22,30 +22,30 @@ const WeatherAlert: React.FC<WeatherAlertProps> = ({ cityAlerts }) => {
         <Text style={styles.noAlerts}>{`No weather alerts for ${cityAlerts.city} currently.`}</Text>
       )}
       {/* Map Component */}
-      <View style={styles.mapContainer}>
-      <View style={styles.mapContainer}>
-      <MapView
-        style={styles.map}
-        >
+      {/* <View style={styles.mapContainer}>
+        <View style={styles.mapContainer}>
+          <MapView
+            style={styles.map}
+          >
             <Marker
-                coordinate={{
+              coordinate={{
                 latitude: cityAlerts.coordinates?.lat,
                 longitude: cityAlerts.coordinates.long,
-                }}
-                pinColor="purple" // any color
-                title={cityAlerts.city} // Use the city name as the title
-                description={`Alerts for ${cityAlerts.city}`} // Add description if needed
+              }}
+              pinColor="purple" // any color
+              title={cityAlerts.city} // Use the city name as the title
+              description={`Alerts for ${cityAlerts.city}`} // Add description if needed
             />
-    </MapView>
- </View>
-      </View>
+          </MapView>
+        </View>
+      </View> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   alertContainer: {
-    marginTop: 30,
+    marginTop: 50,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     marginBottom: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.4)', // Adjust the alpha value for opacity
+    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Adjust the alpha value for opacity
     backdropFilter: 'blur(10px)', // Apply a blur effect
     width: '95%',
     alignSelf: 'center',

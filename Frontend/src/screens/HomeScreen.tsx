@@ -65,7 +65,7 @@ export const HomeScreen: React.FC = () => {
   const daytimeGradient = 'linear-gradient(167deg, #29B2DD 0%, #3AD 47.38%, #2DC8EA 100%)'
   const nighttimeGradient = 'linear-gradient(167deg, #08244F 0%, #134CB5 47.38%, #0B42AB 100%)'
 
-  const backgroundGradient = isDaytime ? daytimeGradient : nighttimeGradient
+  // const backgroundGradient = isDaytime ? daytimeGradient : nighttimeGradient
 
   const handleLocation = async (item: Location): Promise<void> => {
     setLocation([])

@@ -38,8 +38,8 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
 
   const [isDaytime, setIsDaytime] = React.useState(true)
 
-  const daytimeColors = ['#29B2DD', '#3AD', '#2DC8EA']
-  const nighttimeColors = ['#08244F', '#134CB5', '#0B42AB']
+  const daytimeColors = '#2DC8EA'
+  const nighttimeColors = '#0B42AB'
 
   const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
 
@@ -56,17 +56,7 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
         headerShown: false,
         tabBarIcon: props => <TabIcon {...props} route={route} />,
         //   tabBarActiveTintColor: Theme.light.colors.primary,
-        tabBarStyle: styles.tabBar,
-        // tabBarBackground: () => (
-        //   <View style={{ flex: 1 }}>
-        //     <LinearGradient
-        //       colors={backgroundColors}
-        //       start={{ x: 0, y: 0.5 }}
-        //       end={{ x: 1, y: 0.5 }}
-        //       style={styles.linearGradient}
-        //     />
-        //   </View>
-        // ),
+        tabBarStyle: styles(backgroundColors).tabBar,
       })}
       initialRouteName={NavigationKey.HomeScreen}>
       <Tab.Screen name={NavigationKey.HomeScreen} component={HomeScreen} />
@@ -87,13 +77,13 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = (backgroundColors) => StyleSheet.create({
   tabBar: {
     elevation: 0,
     borderTopWidth: 0,
-    backgroundColor: '#0B42AB',
-    borderTopWidth: 0.17,
-    borderBlockColor: 'gray',
+    borderTopWidth: 0.8,
+    backgroundColor: backgroundColors,
+    borderBlockColor: 'white',
     borderCurve: 'circular'
   },
   linearGradient: {
