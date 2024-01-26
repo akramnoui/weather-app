@@ -1,138 +1,125 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Slider from '@react-native-community/slider';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { collection, setDoc, doc } from 'firebase/firestore';
-import { firestore } from '../../firebaseConfig';
+import React from 'react';
+import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { Card, Title, Paragraph, FAB } from 'react-native-paper';
 import { useMainCtx } from '../context/MainContext';
+import { NavigationKey } from '../navigation/NavigationKey';
+import { ScrollView } from 'react-native-gesture-handler';
 
-const Threshold: React.FC = () => {
-  const [windSpeed, setWindSpeed] = useState(0);
-  const [temperature, setTemperature] = useState(0);
-  const [precipitationLevel, setPrecipitationLevel] = useState(0);
-  const [humidityLevel, setHumidityLevel] = useState(0);
-  const {uid} = useMainCtx();
+const Threshold: React.FC = ({ navigation }) => {
+  const { thresholds, setThresholds } = useMainCtx(); // Assuming you have a context for thresholds
 
-  const windSpeedStep = 1;
-  const temperatureStep = 1;
-  const precipitationLevelStep = 10;
-  const humidityLevelStep = 1;
+  const renderThresholdFields = (threshold) => {
+    const fields = [];
 
-  const handleSaveThresholds = async () => {
-    // Create a reference to the "thresholds" subcollection for the current user
-    const thresholdsCollectionRef = collection(firestore, 'users', uid , 'thresholds');
+    if (threshold.windSpeed !== undefined) {
+      fields.push(
+        <Paragraph key="windSpeed" style={styles.cardText}>
+          Wind Speed: {threshold.type} {threshold.windSpeed} km/h
+        </Paragraph>
+      );
+    }
 
-    // Set the thresholds data in the Firestore subcollection
-    await setDoc(doc(thresholdsCollectionRef, 'windSpeed'), { value: windSpeed });
-    await setDoc(doc(thresholdsCollectionRef, 'temperature'), { value: temperature });
-    await setDoc(doc(thresholdsCollectionRef, 'precipitationLevel'), { value: precipitationLevel });
-    await setDoc(doc(thresholdsCollectionRef, 'humidityLevel'), { value: humidityLevel });
+    if (threshold.temperature !== undefined) {
+      fields.push(
+        <Paragraph key="temperature" style={styles.cardText}>
+          Temperature: {threshold.type} {threshold.temperature} °C
+        </Paragraph>
+      );
+    }
 
-    console.log('Seuils enregistrés :', { windSpeed, temperature, precipitationLevel, humidityLevel });
+    if (threshold.humidityLevel !== undefined) {
+      fields.push(
+        <Paragraph key="humidityLevel" style={styles.cardText}>
+          Humidity Level: {threshold.type} {threshold.humidityLevel} %
+        </Paragraph>
+      );
+    }
+
+    if (threshold.precipitationLevel !== undefined) {
+      fields.push(
+        <Paragraph key="precipitationLevel" style={styles.cardText}>
+          Precipitation Level: {threshold.type} {threshold.precipitationLevel} mm/m^2
+        </Paragraph>
+      );
+    }
+
+    return fields;
+  };
+
+  const handleDeleteThreshold = (index) => {
+    // Create a new array without the deleted threshold
+    const updatedThresholds = thresholds.filter((_, i) => i !== index);
+    setThresholds(updatedThresholds);
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.mainContainer}>
       <Text style={styles.title}>Seuil Météo</Text>
-
-      <View style={styles.sliderContainer}>
-        <FontAwesome5 name="wind" size={24} color="#fff" />
-        <Text style={styles.label}>Vitesse du Vent (km/h): {windSpeed}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={100}
-          value={windSpeed}
-          step={windSpeedStep}
-          onValueChange={(value) => setWindSpeed(value)}
-        />
-      </View>
-
-      <View style={styles.sliderContainer}>
-        <FontAwesome5 name="thermometer-half" size={24} color="#fff" />
-        <Text style={styles.label}>Température (°C): {temperature}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={-50}
-          maximumValue={50}
-          value={temperature}
-          step={temperatureStep}
-          onValueChange={(value) => setTemperature(value)}
-        />
-      </View>
-
-      <View style={styles.sliderContainer}>
-        <FontAwesome5 name="cloud-showers-heavy" size={24} color="#fff" />
-        <Text style={styles.label}>Niveau de Précipitation (mm/m^2): {precipitationLevel}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={100}
-          value={precipitationLevel}
-          step={precipitationLevelStep}
-          onValueChange={(value) => setPrecipitationLevel(value)}
-        />
-      </View>
-
-      <View style={styles.sliderContainer}>
-        <FontAwesome5 name="tint" size={24} color="#fff" />
-        <Text style={styles.label}>Humidité (%): {humidityLevel}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={100}
-          value={humidityLevel}
-          step={humidityLevelStep}
-          onValueChange={(value) => setHumidityLevel(value)}
-        />
-      </View>
-
-      <TouchableOpacity onPress={handleSaveThresholds} style={styles.saveButton}>
-        <Text style={styles.buttonText}>Enregistrer les Seuils</Text>
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* Display cards for each threshold in the array */}
+        {thresholds.map((threshold, index) => (
+          <Card key={index} style={styles.card}>
+            <Card.Content>
+              <Title style={styles.cardTitle}>Threshold {index + 1}</Title>
+              {renderThresholdFields(threshold)}
+            </Card.Content>
+            <Card.Actions>
+              <TouchableOpacity onPress={() => handleDeleteThreshold(index)}><Text>delete</Text></TouchableOpacity>
+            </Card.Actions>
+          </Card>
+        ))}
+      </ScrollView>
+      <FAB
+        icon="plus"
+        onPress={() =>
+          navigation.navigate(NavigationKey.ModalNavigator, NavigationKey.AddThreshold)
+        }
+        style={styles.fab}
+      />
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#82a0f1', 
+    backgroundColor: '#82a0f1',
+    paddingVertical: 50,
+  },
+  mainContainer:{
+    flex: 1,
+    backgroundColor: '#82a0f1',
+    paddingTop: 50,
+    justifyContent: 'center',
+  },
+  fab: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    position: 'absolute',
+    bottom: 60,
+    right: 30,
+    justifyContent: 'center', // Center the content vertically
+    alignItems: 'center', // Center the content horizontally
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#fff', 
+    color: '#fff',
+    alignSelf: 'center',
   },
-  sliderContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
+  card: {
+    width: '80%',
     marginBottom: 20,
+    backgroundColor: '#fff',
   },
-  slider: {
-    flex: 1,
-    height: 40,
-  },
-  label: {
-    fontSize: 16,
-    marginLeft: 8,
-    color: '#fff', 
-  },
-  saveButton: {
-    backgroundColor: 'blue',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
+  cardTitle: {
+    fontSize: 20,
     fontWeight: 'bold',
+  },
+  cardText: {
     fontSize: 16,
   },
 });
