@@ -46,7 +46,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ weather, weatherImages })
 
 const styles = StyleSheet.create({
   dailyForecastContainer: {
-    marginBottom: 10,
+    marginBottom: 30,
     flexDirection: "column",
     alignItems: 'center',
     justifyContent: "space-between",

@@ -7,19 +7,25 @@ import { fetchWeatherAlerts } from "../api/weather";
 import WeatherAlert from "../components/alert/WeatherAlert";
 import { useMainCtx } from "../context/MainContext";
 import { Loader } from "../components/misc/Loader";
+import { LinearGradient } from "expo-linear-gradient";
 
 export const AlertScreen: React.FC = () => {
   const [weatherAlerts, setWeatherAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const {prefferedCities, restoredPreferences} = useMainCtx()
+  const { prefferedCities, restoredPreferences } = useMainCtx()
+  const [isDaytime, setIsDaytime] = React.useState(true)
 
 
   useEffect(() => {
+    // Determine if it's daytime or nighttime based on the current time
+    const currentHour = new Date().getHours();
+    setIsDaytime(currentHour >= 6 && currentHour < 18);
+    
     const fetchWeatherAlertsForCities = async () => {
       try {
         if (restoredPreferences && prefferedCities) {
-         // Fetch alerts for all cities
-          const alerts = await Promise.all(prefferedCities.map(async (location: { name: string, coordinates: {lat : string, long: string} }) => {
+          // Fetch alerts for all cities
+          const alerts = await Promise.all(prefferedCities.map(async (location: { name: string, coordinates: { lat: string, long: string } }) => {
             const alert = await fetchWeatherAlerts({ cityName: location.name });
             if (alert.alerts.alert.length > 0) {
               return { city: location.name, alerts: alert.alerts.alert, coordinates: location.coordinates };
@@ -41,14 +47,14 @@ export const AlertScreen: React.FC = () => {
       }
     };
 
-  fetchWeatherAlertsForCities();
-}, [restoredPreferences, prefferedCities]);
+    fetchWeatherAlertsForCities();
+  }, [restoredPreferences, prefferedCities]);
 
 
   const renderAlerts = () => {
     if (weatherAlerts.length > 0) {
       return (
-        <ScrollView style={{paddingBottom: 100}}>
+        <ScrollView style={{ paddingBottom: 100 }}>
           {weatherAlerts.map((cityAlerts, index) => (
             // Use the WeatherAlert component here
             <WeatherAlert key={index} cityAlerts={cityAlerts} />
@@ -60,19 +66,28 @@ export const AlertScreen: React.FC = () => {
   };
 
 
-  if(!restoredPreferences){
-    return <Loader/>;
+  if (!restoredPreferences) {
+    return <Loader />;
   }
+  const daytimeColors = ['#29B2DD', '#3AD', '#2DC8EA']
+  const nighttimeColors = ['#08244F', '#134CB5', '#0B42AB']
 
+  const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
   return (
     <View style={styles.container}>
       <Text style={styles.locationText}>
         Alertes meteo
       </Text>
-      <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} />
+      <LinearGradient
+        colors={backgroundColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.background}
+      />
+      {/* <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} /> */}
       {weatherAlerts.length === 0 && (
-          <Text style={styles.noAlertText}>
-          Il n'y a actuellement aucune alerte dans vos villes favorites 
+        <Text style={styles.noAlertText}>
+          Il n'y a actuellement aucune alerte dans vos villes favorites
         </Text>
       )}
       {/* Weather Alerts */}
@@ -87,18 +102,17 @@ export const AlertScreen: React.FC = () => {
 
 
 const styles = StyleSheet.create({
+  background: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%'
+  },
   container: {
     position: "absolute",
     height: '100%',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  background: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-
   },
   loadingContainer: {
     flex: 1,
@@ -109,7 +123,7 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     alignSelf: 'center',
-    top: 50,
+    top: 60,
     zIndex: 1,
     fontSize: 24,
     fontWeight: "bold",
