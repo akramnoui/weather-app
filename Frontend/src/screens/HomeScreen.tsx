@@ -28,12 +28,12 @@ export const HomeScreen: React.FC = () => {
   const [isDaytime, setIsDaytime] = React.useState(true)
 
 
-  const {city , setCity, restored, uid, setUid, restoredUid} = useMainCtx();
+  const { city, setCity, restored, uid, setUid, restoredUid } = useMainCtx();
 
   const executeRequest = async () => {
     const token = (await Notifications.getExpoPushTokenAsync({
       projectId: '51770aa0-6c4c-4d92-8d17-e37bc8b1ce1c'
-   })).data;
+    })).data;
     return token;
   }
   // Custom hook usage
@@ -45,11 +45,13 @@ export const HomeScreen: React.FC = () => {
 
     const fetchData = async () => {
       if (restored) {
+        console.log(restored);
         // Fetch the notification token only if it hasn't been fetched yet
         const token = await executeRequest();
 
         // Now you can use the token as needed, for example, save it to Firestore
         if (uid) {
+          console.log(uid);
           const userDocRef = doc(collection(firestore, "users"), uid);
           await setDoc(userDocRef, { notificationToken: token }, { merge: true });
         }
@@ -65,7 +67,7 @@ export const HomeScreen: React.FC = () => {
   const daytimeGradient = 'linear-gradient(167deg, #29B2DD 0%, #3AD 47.38%, #2DC8EA 100%)'
   const nighttimeGradient = 'linear-gradient(167deg, #08244F 0%, #134CB5 47.38%, #0B42AB 100%)'
 
-  const backgroundGradient = isDaytime ? daytimeGradient : nighttimeGradient
+  // const backgroundGradient = isDaytime ? daytimeGradient : nighttimeGradient
 
   const handleLocation = async (item: Location): Promise<void> => {
     setLocation([])
@@ -97,7 +99,6 @@ export const HomeScreen: React.FC = () => {
 
     try {
       if(city){
-
       const cityName = city;
       const data = await featchWeatherForescast({
         cityName,
@@ -121,43 +122,43 @@ export const HomeScreen: React.FC = () => {
   const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
 
 
-  if(!restored){
-    return <Loader/>;
+  if (!restored) {
+    return <Loader />;
   }
 
   return (
     <View style={[styles.container]}>
       <StatusBar style="light" />
       <LinearGradient
-      colors={backgroundColors}
-      start={{ x: 0, y: 0.5 }}
-      end={{ x: 1, y: 0.5 }}
-      style={styles.background}
-    />
+        colors={backgroundColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.background}
+      />
       {loading
         ? (
-        <View style={styles.loadingContainer}>
-          <Progress.CircleSnail thickness={10} color="#0bb3b2" size={100} />
-        </View>
-          )
+          <View style={styles.loadingContainer}>
+            <Progress.CircleSnail thickness={10} color="#0bb3b2" size={100} />
+          </View>
+        )
         : (
 
-        <SafeAreaView style={{ height: '100%', width: '100%', justifyContent: 'space-around' }}>
+          <SafeAreaView style={{ height: '100%', width: '100%', justifyContent: 'space-around' }}>
 
-          <SearchBar
-            showSearch={showSearch}
-            toggleSearch={toggleSearch}
-            handleTextDebouce={handleTextDebouce}
-            locations={locations}
-            handleLocation={handleLocation}
-          />
-          <TouchableWithoutFeedback style={[{ height: '100%', paddingBottom: 20 }]} onPress={() => { toggleSearch(false) }}>
-          <WeatherInfo current={current} location={location} weatherImages={weatherImages} weatherPT={weatherPT} />
-          <DailyForecast weather={weather} weatherImages={weatherImages} />
-          </TouchableWithoutFeedback>
+            <SearchBar
+              showSearch={showSearch}
+              toggleSearch={toggleSearch}
+              handleTextDebouce={handleTextDebouce}
+              locations={locations}
+              handleLocation={handleLocation}
+            />
+            <TouchableWithoutFeedback style={[{ height: '100%', paddingBottom: 20 }]} onPress={() => { toggleSearch(false) }}>
+              <WeatherInfo current={current} location={location} weatherImages={weatherImages} weatherPT={weatherPT} />
+              <DailyForecast weather={weather} weatherImages={weatherImages} />
+            </TouchableWithoutFeedback>
 
-        </SafeAreaView>
-          )}
+          </SafeAreaView>
+        )}
     </View>
   )
 }

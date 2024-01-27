@@ -55,9 +55,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ showSearch, toggleSearch, handleT
 const styles = StyleSheet.create({
   searchContainer: {
     height: "10%",
-    marginHorizontal: 4,
+    marginHorizontal: 15,
     position: "relative",
-    marginTop: 20,
+    marginTop: 30,
     zIndex: 50,
   },
   searchInputContainer: {
@@ -65,14 +65,15 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     borderRadius: 9999,
-    backgroundColor: theme.bgWhite("0.2"),
+    backgroundColor: theme.bgWhite("0.15"),
   },
   searchInput: {
-    paddingLeft: 6,
+    paddingLeft: 10,
     height: 40,
     flex: 1,
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "400",
+    fontStyle: 'italic',
     color: "white",
   },
   searchIconContainer: {
