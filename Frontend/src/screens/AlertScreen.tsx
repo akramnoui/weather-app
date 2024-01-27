@@ -73,6 +73,7 @@ export const AlertScreen: React.FC = () => {
   const nighttimeColors = ['#08244F', '#134CB5', '#0B42AB']
 
   const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
+  
   return (
     <View style={styles.container}>
       <Text style={styles.locationText}>
@@ -140,55 +141,55 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingHorizontal: 50,
   },
-  alertContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
-    padding: 20,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-    marginBottom: 120,
-    backgroundColor: 'rgba(255, 255, 255, 0.4)', // Adjust the alpha value for opacity
-    backdropFilter: 'blur(10px)', // Apply a blur effect
-  },
+  // alertContainer: {
+  //   position: 'absolute',
+  //   bottom: 20,
+  //   left: 20,
+  //   right: 20,
+  //   padding: 20,
+  //   borderRadius: 10,
+  //   shadowColor: '#000',
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowOpacity: 0.3,
+  //   shadowRadius: 4,
+  //   elevation: 5,
+  //   marginBottom: 120,
+  //   backgroundColor: 'rgba(255, 255, 255, 0.4)', // Adjust the alpha value for opacity
+  //   backdropFilter: 'blur(10px)', // Apply a blur effect
+  // },
   backgroundImage: {
     position: 'absolute',
     width: '100%',
     height: '100%',
     borderRadius: 10,
   },
-  alertTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
-  },
-  alertCategory: {
-    fontSize: 16,
-    color: '#555',
-    marginBottom: 10,
-  },
-  alertDesc: {
-    fontSize: 14,
-    marginBottom: 10,
-    color: '#333',
-  },
-  alertTime: {
-    fontSize: 12,
-    color: '#777',
-  },
-  mapContainer: {
-    height: 200,
-    borderRadius: 10,
-    overflow: 'hidden',
-    marginTop: 10,
-  },
-  map: {
-    flex: 1,
-  },
+  // alertTitle: {
+  //   fontSize: 20,
+  //   fontWeight: 'bold',
+  //   marginBottom: 10,
+  //   color: '#333',
+  // },
+  // alertCategory: {
+  //   fontSize: 16,
+  //   color: '#555',
+  //   marginBottom: 10,
+  // },
+  // alertDesc: {
+  //   fontSize: 14,
+  //   marginBottom: 10,
+  //   color: '#333',
+  // },
+  // alertTime: {
+  //   fontSize: 12,
+  //   color: '#777',
+  // },
+  // mapContainer: {
+  //   height: 200,
+  //   borderRadius: 10,
+  //   overflow: 'hidden',
+  //   marginTop: 10,
+  // },
+  // map: {
+  //   flex: 1,
+  // },
 });
