@@ -53,8 +53,8 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         headerShown: false,
-        tabBarIcon: props => <TabIcon {...props} route={route} />,
-        //   tabBarActiveTintColor: Theme.light.colors.primary,
+        tabBarIcon: props => <TabIcon {...props} color='white' route={route} />,
+          tabBarActiveTintColor: "blue",
         tabBarStyle: styles(backgroundColors).tabBar,
       })}
       initialRouteName={NavigationKey.HomeScreen}>
