@@ -39,7 +39,7 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ current, location, weatherIma
       <View style={styles.mybox}>
         <View style={{alignItems: 'center',}}>
           <View style={{ flexDirection: "column", justifyContent: "center" }}>
-            <Image source={weatherImages[current?.condition?.text]} style={styles.weatherImage} />
+            <Image source={weatherImages[current?.condition?.text] || weatherImages[0]} style={styles.weatherImage} />
           </View>
 
           <Text style={styles.temperatureText}>

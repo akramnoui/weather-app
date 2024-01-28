@@ -14,6 +14,8 @@ export const transformImageUrl = (url: string): string | null => {
   };
 
   export const daytimeColors = ['#87CEEB', '#6BB7CE', '#3AD', '#00BFFF', '#00A5D6'];
-  export const nighttimeColors = ['#001F3F', '#002B4D', '#003366', '#001F33', '#001522'];
+  export const nighttimeColors = ['#87CEEB', '#6BB7CE', '#3AD', '#00BFFF', '#00A5D6'];
+
+  export const accentColor = '#669bbc';
   
   

@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Label } from "./Label";
+import { accentColor } from "../../util/util";
 
 interface AddParamProps {
   selectedParams: string[];
@@ -33,7 +34,7 @@ const AddParam: FC<AddParamProps> = ({ selectedParams, setSelectedParams }) => {
 
   const calculateLabelStyle = (filterId: string) => ({
     backgroundColor: selectedParams.includes(filterId)
-      ? 'blue'
+      ? accentColor
       : colors.white,
   });
 
