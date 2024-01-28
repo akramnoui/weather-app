@@ -38,10 +38,9 @@ export const TabIcon: React.FC<Props> = ({
   size,
   route,
 }) => {
-  const iconColor = focused ? 'red' : color
   return (
     <View style={[styles.tab, focused && styles.tabFocused]}>
-      <Icon name={iconMapper[route.name]} color={iconColor} size={size} />
+      <Icon name={iconMapper[route.name]} color={color} size={size} />
     </View>
   );
 };

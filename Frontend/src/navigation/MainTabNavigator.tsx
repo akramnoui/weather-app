@@ -37,8 +37,9 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
 
   const [isDaytime, setIsDaytime] = React.useState(true)
 
-  const daytimeColors = '#2DC8EA'
-  const nighttimeColors = '#0B42AB'
+  const daytimeColors = '#87CEEB'
+  const nighttimeColors = '#001F3F'
+
 
   const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
 
