@@ -55,10 +55,10 @@ export const AlertScreen: React.FC = () => {
   const renderAlerts = () => {
     if (weatherAlerts.length > 0) {
       return (
-        <ScrollView style={{ paddingBottom: 100 }}>
+        <ScrollView style={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
           {weatherAlerts.map((cityAlerts, index) => (
             // Use the WeatherAlert component here
-            <WeatherAlert key={index} cityAlerts={cityAlerts} />
+            <WeatherAlert key={index} cityAlerts={cityAlerts}/>
           ))}
         </ScrollView>
       );
