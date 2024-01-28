@@ -6,6 +6,7 @@ import { sizes } from '../../theme/sizes';
 import React from 'react';
 
 import Icon2 from 'react-native-vector-icons/FontAwesome'; 
+import { colors } from 'react-native-elements';
 const SettingsIcon = () => {
   return (
     <View>
@@ -32,14 +33,15 @@ const iconMapper: { [key: string]: string } = {
 };
 
 export const TabIcon: React.FC<Props> = ({
-  focused = false,
+  focused,
   color,
   size,
   route,
 }) => {
+  const iconColor = focused ? 'red' : color
   return (
     <View style={[styles.tab, focused && styles.tabFocused]}>
-      <Icon name={iconMapper[route.name]} color={color} size={size} />
+      <Icon name={iconMapper[route.name]} color={iconColor} size={size} />
     </View>
   );
 };
@@ -51,6 +53,6 @@ const styles = StyleSheet.create({
     padding: sizes.s,
   },
   tabFocused: {
-    //backgroundColor: colors.lightgray,
+    // backgroundColor: colors.grey0,
   },
 });

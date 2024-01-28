@@ -8,6 +8,7 @@ import WeatherAlert from "../components/alert/WeatherAlert";
 import { useMainCtx } from "../context/MainContext";
 import { Loader } from "../components/misc/Loader";
 import { LinearGradient } from "expo-linear-gradient";
+import { daytimeColors, nighttimeColors } from "../util/util";
 
 export const AlertScreen: React.FC = () => {
   const [weatherAlerts, setWeatherAlerts] = useState([]);
@@ -69,8 +70,7 @@ export const AlertScreen: React.FC = () => {
   if (!restoredPreferences) {
     return <Loader />;
   }
-  const daytimeColors = ['#29B2DD', '#3AD', '#2DC8EA']
-  const nighttimeColors = ['#08244F', '#134CB5', '#0B42AB']
+
 
   const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
   
