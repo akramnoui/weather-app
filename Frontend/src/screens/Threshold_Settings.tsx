@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { Card, Title, Paragraph, FAB } from 'react-native-paper';
 import { useMainCtx } from '../context/MainContext';
 import { NavigationKey } from '../navigation/NavigationKey';
 import { ScrollView } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
+import { daytimeColors, nighttimeColors } from '../util/util';
 
 const Threshold: React.FC = ({ navigation }) => {
-  const { thresholds, setThresholds } = useMainCtx(); // Assuming you have a context for thresholds
+  const { thresholds, setThresholds } = useMainCtx(); 
+  const [isDaytime, setIsDaytime] = React.useState(true)
+
+  const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
+
+
+  useEffect(() => {
+
+    // Determine if it's daytime or nighttime based on the current time
+    const currentHour = new Date().getHours();
+    setIsDaytime(currentHour >= 6 && currentHour < 18);
+
+   
+  }, []);
+
 
   const renderThresholdFields = (threshold) => {
     const fields = [];
@@ -55,6 +71,12 @@ const Threshold: React.FC = ({ navigation }) => {
   return (
     <View style={styles.mainContainer}>
       <Text style={styles.title}>Seuil Météo</Text>
+      <LinearGradient
+        colors={backgroundColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.background}
+      />
       <ScrollView contentContainerStyle={styles.container}>
         {/* Display cards for each threshold in the array */}
         {thresholds.map((threshold, index) => (
@@ -64,7 +86,9 @@ const Threshold: React.FC = ({ navigation }) => {
               {renderThresholdFields(threshold)}
             </Card.Content>
             <Card.Actions>
-              <TouchableOpacity onPress={() => handleDeleteThreshold(index)}><Text>delete</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDeleteThreshold(index)}>
+                <Text>delete</Text>
+              </TouchableOpacity>
             </Card.Actions>
           </Card>
         ))}
@@ -72,7 +96,10 @@ const Threshold: React.FC = ({ navigation }) => {
       <FAB
         icon="plus"
         onPress={() =>
-          navigation.navigate(NavigationKey.ModalNavigator, NavigationKey.AddThreshold)
+          navigation.navigate(
+            NavigationKey.ModalNavigator,
+            NavigationKey.AddThreshold
+          )
         }
         style={styles.fab}
       />
@@ -84,7 +111,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#82a0f1',
     paddingVertical: 50,
   },
   mainContainer:{
@@ -111,7 +137,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   card: {
-    width: '80%',
+    width: '90%',
     marginBottom: 20,
     backgroundColor: '#fff',
   },
@@ -121,6 +147,11 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: 16,
+  },
+  background: {
+    position: "absolute",
+    width: "100%",
+    height: "120%",
   },
 });
 

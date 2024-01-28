@@ -22,6 +22,7 @@ import { Loader } from "../components/misc/Loader";
 import { firestore } from "../../firebaseConfig";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { LinearGradient } from "expo-linear-gradient";
+import { daytimeColors, nighttimeColors } from "../util/util";
 
 export const PREFERRED_CITIES_KEY = "preferredCities"; // AsyncStorage key for storing preferred cities
 
@@ -135,8 +136,7 @@ export const Preferences: React.FC = ({ navigation }) => {
     return <Loader />;
   }
 
-  const daytimeColors = ['#29B2DD', '#3AD', '#2DC8EA']
-  const nighttimeColors = ['#08244F', '#134CB5', '#0B42AB']
+
 
   const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
 

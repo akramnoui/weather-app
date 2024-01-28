@@ -6,6 +6,7 @@ import { sizes } from '../../theme/sizes';
 import React from 'react';
 
 import Icon2 from 'react-native-vector-icons/FontAwesome'; 
+import { colors } from 'react-native-elements';
 const SettingsIcon = () => {
   return (
     <View>
