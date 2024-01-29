@@ -47,15 +47,14 @@ export const HomeScreen: React.FC = () => {
 
     const fetchData = async () => {
       if (restored) {
-        console.log(restored);
                 // Continue with other data fetching or processing
-                fetchMyWeatherData();
+        fetchMyWeatherData();
         // Fetch the notification token only if it hasn't been fetched yet
         const token = await executeRequest();
+        console.log(token);
 
         // Now you can use the token as needed, for example, save it to Firestore
         if (uid) {
-          console.log(uid);
           const userDocRef = doc(collection(firestore, "users"), uid);
           await setDoc(userDocRef, { notificationToken: token }, { merge: true });
         }
@@ -75,14 +74,12 @@ export const HomeScreen: React.FC = () => {
     toggleSearch(false)
     setCity(item.name);
     setLoading(true)
-    console.log('++++++++++++++++++++');
 
     await featchWeatherForescast({
       cityName: item.name,
       days: '7'
     })
       .then((data) => {
-        console.log('++++++++++++++++++++', data);
         setWeather(data)
         setLoading(false)
       })
