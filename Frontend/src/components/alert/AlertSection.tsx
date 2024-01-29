@@ -17,7 +17,8 @@ const AlertSection: React.FC<AlertSectionProps> = ({ title, alerts }) => {
 
       {alerts.map((alert, alertIndex) => (
 
-        alert.msgtype != "" ? (
+        alert.event != "" ? (
+
           <View key={alertIndex} style={styles.alertContainer}>
             <View style={{ flexDirection: "row", alignItems: 'center', }}>
               <Image source={require("../../../assets/icons/warning-sign.png")} style={{ marginRight: 7, marginBottom: 10 }} />
@@ -28,19 +29,30 @@ const AlertSection: React.FC<AlertSectionProps> = ({ title, alerts }) => {
               {alert.category}
             </Text>
 
+            <Text style={{ color: "lightgrey", fontSize: 15, fontWeight: "300", marginBottom: 10 }}>
+              Effective : {formatDate(alert.effective)[0]} at {formatDate(alert.effective)[1]}
+            </Text>
+
+            <Text style={{ color: "lightgrey", fontSize: 15, fontWeight: "300", marginBottom: 10 }}>
+              Expires : {formatDate(alert.expires)[0]} at {formatDate(alert.expires)[1]}
+            </Text>
+
             <Text style={{ color: "lightgrey", fontSize: 15, fontWeight: "300" }}>
               Areas concernerd
             </Text>
 
-            <View style={styles.areasContainer}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {alert.areas.split(";").map((area, areaIndex) => (
-                  <TouchableOpacity key={areaIndex} style={styles.areaElement}>
-                    <Text style={{ fontWeight: "400", color: "lightgrey" }}>{area}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
+            {alert.areas != "" ? (
+              <View style={styles.areasContainer}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {alert.areas.split(";").map((area, areaIndex) => (
+                    <TouchableOpacity key={areaIndex} style={styles.areaElement}>
+                      <Text style={{ fontWeight: "400", color: "lightgrey" }}>{area}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            ) : (null)
+            }
 
             {alertIndex != (alerts.length - 1) ? (
               <View style={styles.separator} />
@@ -58,10 +70,16 @@ const AlertSection: React.FC<AlertSectionProps> = ({ title, alerts }) => {
   );
 };
 
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleString().split(","); // Adjust this according to your desired date format
+};
+
 const styles = StyleSheet.create({
   alertSectionContainer: {
     padding: 20,
     alignSelf: 'center',
+    borderWidth: 0,
   },
   alert: {
     marginBottom: 15,
@@ -76,17 +94,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     // marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 5,
-    borderBottomColor: "#EDFCFF"
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowRadius: 4,
+    // elevation: 5,
+    // borderBottomColor: "#EDFCFF"
     // backgroundColor: "white"
   },
   alertCategory: {
     fontSize: 18,
     fontWeight: '400',
-    marginBottom: 15,
+    marginBottom: 10,
     color: 'white',
   },
   alertDesc: {

@@ -52,12 +52,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
-    marginBottom: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.2)', // Adjust the alpha value for opacity
     backdropFilter: 'blur(10px)', // Apply a blur effect
     width: '95%',
     alignSelf: 'center',
-    paddingBottom: 30,
+    paddingBottom: 10,
     paddingHorizontal: 10,
   },
   alert: {

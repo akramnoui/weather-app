@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground } from 'react-native';
 import { Card, Title, Paragraph, FAB } from 'react-native-paper';
 import { useMainCtx } from '../context/MainContext';
 import { NavigationKey } from '../navigation/NavigationKey';
 import { ScrollView } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
-import { daytimeColors, nighttimeColors } from '../util/util';
+import { accentColor, daytimeColors, nighttimeColors } from '../util/util';
 
 const Threshold: React.FC = ({ navigation }) => {
   const { thresholds, setThresholds } = useMainCtx(); 
@@ -70,7 +70,9 @@ const Threshold: React.FC = ({ navigation }) => {
 
   return (
     <View style={styles.mainContainer}>
-      <Text style={styles.title}>Seuil Météo</Text>
+            <Text style={styles.locationText}>
+        Custom Threshold Alerts
+      </Text>
       <LinearGradient
         colors={backgroundColors}
         start={{ x: 0, y: 0 }}
@@ -79,11 +81,24 @@ const Threshold: React.FC = ({ navigation }) => {
       />
       <ScrollView contentContainerStyle={styles.container}>
         {/* Display cards for each threshold in the array */}
+        {thresholds.length === 0 && (
+        <Text style={styles.noAlertText}>
+        You can set your thresholds for weather parameters here.{'\n\n'} Click the 'Plus' button to add an alert threshold.
+        </Text>      )}
         {thresholds.map((threshold, index) => (
+          
           <Card key={index} style={styles.card}>
             <Card.Content>
+            {/* <ImageBackground
+            key={index}
+            source={require('../../assets/images/2.jpg')}
+            style={styles.imageBackground}
+            imageStyle={styles.gradientOverlay}
+          > */}
               <Title style={styles.cardTitle}>Threshold {index + 1}</Title>
               {renderThresholdFields(threshold)}
+            {/* </ImageBackground> */}
+
             </Card.Content>
             <Card.Actions>
               <TouchableOpacity onPress={() => handleDeleteThreshold(index)}>
@@ -115,7 +130,6 @@ const styles = StyleSheet.create({
   },
   mainContainer:{
     flex: 1,
-    backgroundColor: '#82a0f1',
     paddingTop: 50,
     justifyContent: 'center',
   },
@@ -128,6 +142,7 @@ const styles = StyleSheet.create({
     right: 30,
     justifyContent: 'center', // Center the content vertically
     alignItems: 'center', // Center the content horizontally
+    backgroundColor: accentColor,
   },
   title: {
     fontSize: 24,
@@ -137,9 +152,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   card: {
-    width: '90%',
+    width: '100%',
     marginBottom: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "rgba(255, 255, 255, 0.8)", // Adjust the alpha value for opacity
+    // backdropFilter: 'blur(10px)', // Apply a blur effect
   },
   cardTitle: {
     fontSize: 20,
@@ -148,10 +164,52 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 16,
   },
+  noAlertText: {
+    color: "white",
+    textAlign: "center",
+    alignSelf: 'center',
+    top: 50,
+    zIndex: 1,
+    fontSize: 20,
+    marginBottom: 30,
+    paddingHorizontal: 10,
+    fontFamily: 'Poppins',
+
+  },
   background: {
     position: "absolute",
     width: "100%",
     height: "120%",
+  },
+  locationText: {
+    color: "white",
+    textAlign: "center",
+    alignSelf: 'center',
+    zIndex: 1,
+    fontSize: 24,
+    marginTop: 20,
+    fontFamily: 'Poppins-bold',
+  },
+  imageBackground: {
+    flex: 1,
+    resizeMode: 'cover', // or 'stretch' or 'contain'
+    justifyContent: 'center',
+  },
+  gradientOverlay: {
+    // backgroundColor: 'rgba(0, 0, 0, 0.3)', // Adjust the opacity and color as needed
+    // opacity: 0.6,
+
+  },
+ 
+  cardContent: {
+    marginBottom: 8,
+  },
+  cardActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  deleteText: {
+    color: 'white', // Adjust the text color
   },
 });
 

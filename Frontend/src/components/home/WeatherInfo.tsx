@@ -28,10 +28,10 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ current, location, weatherIma
         <Text style={styles.locationText}>
           {location?.name},
           <Text style={styles.regionText}>
-            {" " + location?.region}
+            {" " + location?.region }
           </Text>
           <Text style={styles.countryText}>
-            {" " + location?.country}
+            {", " + location?.country}
           </Text>
         </Text>
 
@@ -39,7 +39,7 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ current, location, weatherIma
       <View style={styles.mybox}>
         <View style={{alignItems: 'center',}}>
           <View style={{ flexDirection: "column", justifyContent: "center" }}>
-            <Image source={weatherImages[current?.condition?.text]} style={styles.weatherImage} />
+            <Image source={weatherImages[current?.condition?.text] || weatherImages[0]} style={styles.weatherImage} />
           </View>
 
           <Text style={styles.temperatureText}>
@@ -100,18 +100,20 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     fontSize: 28,
-    fontWeight: "bold",
+    // fontWeight: "700",
     marginBottom: 30,
+    fontFamily: 'Poppins-bold',
   },
   regionText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: 'Poppins-bold',
+
   },
   countryText: {
     color: "white",
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: 'Poppins-bold',
   },
   weatherImage: {
     width: 52,
@@ -121,12 +123,14 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     fontSize: 60,
-    fontWeight: "bold",
+    fontFamily: 'Poppins-bold',
     marginLeft: 5,
   },
   conditionText: {
     color: "white",
     textAlign: "center",
+    fontFamily: 'Poppins-bold',
+
     fontSize: 20,
     letterSpacing: 1,
   },
@@ -138,6 +142,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginHorizontal: 10,
+    fontFamily: 'Poppins',
+
   },
   detailIcon: {
     width: 24,
@@ -145,9 +151,10 @@ const styles = StyleSheet.create({
   },
   detailText: {
     color: "white",
-    fontWeight: "600",
     fontSize: 16,
     marginHorizontal: 4,
+    fontFamily: 'Poppins',
+
   },
 });
 

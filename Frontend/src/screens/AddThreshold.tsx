@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -11,6 +11,8 @@ import AddParam from '../components/threshold/AddParam';
 import { RadioButton } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RNPickerSelect, { PickerStyle } from 'react-native-picker-select';
+import { accentColor, daytimeColors, nighttimeColors } from '../util/util';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 
@@ -26,6 +28,20 @@ export const AddThreshold: React.FC = ({ navigation }) => {
     const [thresholdType, setThresholdType] = useState('above'); // Default threshold type
     const [selectedCity, setSelectedCity] = useState(null);
     const { setThresholds } = useMainCtx(); // Updated to use setThresholds from context
+    const [isDaytime, setIsDaytime] = React.useState(true)
+
+
+    const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
+
+
+    useEffect(() => {
+  
+      // Determine if it's daytime or nighttime based on the current time
+      const currentHour = new Date().getHours();
+      setIsDaytime(currentHour >= 6 && currentHour < 18);
+  
+     
+    }, []);
 
     const handleSaveThresholds = async () => {
       // Create a reference to the "thresholds" subcollection for the current user
@@ -79,12 +95,17 @@ export const AddThreshold: React.FC = ({ navigation }) => {
   
     return (
         <View style={styles.container}>
-           
+       <LinearGradient
+        colors={backgroundColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.background}
+      />
           <AddParam selectedParams={selectedParams} setSelectedParams={setSelectedParams} />
           <View style={styles.cityDropdownContainer}>
                 <Text style={styles.labelCity}>Select City:</Text>
                 <RNPickerSelect
-                value={selectedCity}
+                value={selectedCity || 'Paris'}
                 onValueChange={(value) => setSelectedCity(value)}
                 items={prefferedCities.map((city) => ({
                     label: city.name,
@@ -92,6 +113,7 @@ export const AddThreshold: React.FC = ({ navigation }) => {
                 }))}
                 style={pickerStyle}
                 useNativeAndroidPickerStyle={false} // Set to true if you want to use native Android styles
+                
                 />
             </View>
           {/* Render sliders based on selected parameters */}
@@ -174,16 +196,20 @@ export const AddThreshold: React.FC = ({ navigation }) => {
 
     const pickerStyle: PickerStyle = {
         inputIOS: {
-            color: 'blue',
+            color: accentColor,
             height: 40,
             marginLeft: 8,
-            fontSize: 20,
+            fontSize: 21,
+            fontFamily: 'Poppins',
+
             // fontWeight: 'bold',
         },
         inputAndroid: {
             color: '#fff',
             height: 40,
             marginLeft: 8,
+            fontSize: 21,
+            fontFamily: 'Poppins',
         },
         placeholder: {
             color: '#fff',
@@ -213,9 +239,8 @@ const styles = StyleSheet.create({
       },
     container: {
         flex: 1,
-        backgroundColor: '#82a0f1',
-        padding: 20,
         justifyContent: 'space-between',
+        padding: 20,
       },
       contentContainer: {
         flex: 1,
@@ -245,7 +270,7 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         marginRight: 10,
         color: '#fff',
-        fontWeight: 'bold',
+        fontFamily: 'Poppins-bold',
       },
       thresholdTypeContainer: {
         flexDirection: 'row',
@@ -257,9 +282,11 @@ const styles = StyleSheet.create({
       radioLabel: {
         fontSize: 16,
         color: '#fff',
+        fontFamily: 'Poppins',
+
       },
       saveButton: {
-        backgroundColor: 'blue',
+        backgroundColor: accentColor,
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 20,
@@ -272,12 +299,18 @@ const styles = StyleSheet.create({
       },
       buttonText: {
         color: 'white',
-        fontWeight: 'bold',
         fontSize: 16,
+        fontFamily: 'Poppins-bold',
+
       },
       fab: {
         alignSelf: 'flex-end',
         zIndex: 1000,
+      },
+      background: {
+        position: "absolute",
+        width: "150%",
+        height: "150%",
       },
 });
 
