@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
   alertSectionContainer: {
     padding: 20,
     alignSelf: 'center',
+    borderWidth: 0,
   },
   alert: {
     marginBottom: 15,
@@ -76,11 +77,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     // marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 5,
-    borderBottomColor: "#EDFCFF"
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowRadius: 4,
+    // elevation: 5,
+    // borderBottomColor: "#EDFCFF"
     // backgroundColor: "white"
   },
   alertCategory: {

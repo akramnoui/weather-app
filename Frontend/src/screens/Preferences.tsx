@@ -145,6 +145,8 @@ export const Preferences: React.FC = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       
       <StatusBar style="light" />
+      <Text style={styles.locationText}>Preferred cities</Text>
+
       <SearchBar
         showSearch={showSearch}
         toggleSearch={toggleSearch}
@@ -160,7 +162,6 @@ export const Preferences: React.FC = ({ navigation }) => {
       />
       
 
-      <Text style={styles.locationText}>Preferred cities</Text>
       {/* <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} /> */}
       <TouchableWithoutFeedback style={[{ height: '100%', paddingBottom: 20, }]} onPress={() => toggleSearch(false)}>
         <ScrollView contentContainerStyle={styles2.cardContainer}>
@@ -206,20 +207,10 @@ const WeatherCard: React.FC<{
     >
       <View style={styles2.weatherCard}>
         <Text style={styles2.cityText}>{city.name}</Text>
-        <Text style={styles2.temperatureText}>{`${temperature}°C`}</Text>
+        <Text style={styles2.temperatureText}> {Math.round(temperature)}&#176;</Text>
         <Text style={styles2.conditionText}>{condition}</Text>
       </View>
       <Image source={weatherImages[city.condition]} style={styles2.weatherImage} />
-      {/* </TouchableOpacity><TouchableOpacity
-      style={{
-        backgroundColor: 'red',
-        padding: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      onPress={handleSwipe}
-    >
-        <Text style={{ color: 'white' }}>Delete</Text> */}
     </TouchableOpacity></>
   );
 };
@@ -235,6 +226,7 @@ const styles2 = StyleSheet.create({
     padding: 16,
     marginBottom: 10,
     backdropFilter: 'blur(10px)', // Apply a blur effect
+    marginTop: 20,
   },
 
   cardContainer: {
@@ -246,16 +238,20 @@ const styles2 = StyleSheet.create({
   },
   cityText: {
     fontSize: 18,
-    fontWeight: "bold",
     marginBottom: 8,
+    fontFamily: 'Poppins-bold',
   },
   temperatureText: {
-    fontSize: 16,
+    fontSize: 22,
     marginBottom: 4,
+    fontFamily: 'Poppins',
+
   },
   conditionText: {
     fontSize: 14,
     color: "#555",
+    fontFamily: 'Poppins-bold',
+
   },
   weatherImage: {
     width: 70,
@@ -285,7 +281,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     zIndex: 1,
     fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 30,
+    marginTop: 50,
+    fontFamily: 'Poppins-bold',
   },
 });

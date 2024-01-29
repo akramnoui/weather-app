@@ -1,27 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { View, Image, StyleSheet, Text, ScrollView } from "react-native";
-import MapView, { Polygon } from 'react-native-maps';
-import { getData } from "../storage/asyncStorage";
-import { PREFERRED_CITIES_KEY } from "./Preferences";
-import { fetchWeatherAlerts } from "../api/weather";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import WeatherAlert from "../components/alert/WeatherAlert";
 import { useMainCtx } from "../context/MainContext";
 import { Loader } from "../components/misc/Loader";
 import { LinearGradient } from "expo-linear-gradient";
 import { daytimeColors, nighttimeColors } from "../util/util";
+import { checkThresholdAlertsLocally, featchWeatherForescast, fetchWeatherAlerts } from "../api/weather";
+
 
 export const AlertScreen: React.FC = () => {
   const [weatherAlerts, setWeatherAlerts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { prefferedCities, restoredPreferences } = useMainCtx()
-  const [isDaytime, setIsDaytime] = React.useState(true)
+  const [thresholdAlerts, setThresholdAlerts] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+  const { prefferedCities, restoredPreferences, thresholds } = useMainCtx();
+  const [isDaytime, setIsDaytime] = React.useState(true);
+
+  // Function to fetch threshold alerts from Firebase callable function
+  const fetchThresholdAlerts = async () => {
+    try {
+      const thresholdAlerts = await checkThresholdAlertsLocally(thresholds);
+      console.log('threshold alerts', thresholdAlerts);
+      // Extract threshold alerts from the callable function result
+      setThresholdAlerts(thresholdAlerts);
+    } catch (error) {
+      console.error("Error fetching threshold alerts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Determine if it's daytime or nighttime based on the current time
     const currentHour = new Date().getHours();
     setIsDaytime(currentHour >= 6 && currentHour < 18);
-    
+
     const fetchWeatherAlertsForCities = async () => {
       try {
         if (restoredPreferences && prefferedCities) {
@@ -40,6 +53,9 @@ export const AlertScreen: React.FC = () => {
 
           console.log('filtered alerts', filteredAlerts);
           setWeatherAlerts(filteredAlerts);
+
+          // Fetch and update threshold alerts
+          fetchThresholdAlerts();
         }
       } catch (error) {
         console.error("Error fetching weather alerts:", error);
@@ -51,6 +67,18 @@ export const AlertScreen: React.FC = () => {
     fetchWeatherAlertsForCities();
   }, [restoredPreferences, prefferedCities]);
 
+  const renderThresholdAlerts = () => {
+    console.log(weatherAlerts);
+    if (weatherAlerts.length > 0) {
+      return (
+        <ScrollView style={{ paddingBottom: 100 }}>
+          {/* {weatherAlerts.map((thresholdAlert, index) => (
+            // Use the WeatherAlert component here for threshold alerts
+          ))} */}
+        </ScrollView>
+      );
+    }
+  };
 
   const renderAlerts = () => {
     if (weatherAlerts.length > 0) {
@@ -71,14 +99,11 @@ export const AlertScreen: React.FC = () => {
     return <Loader />;
   }
 
+  const backgroundColors = isDaytime ? daytimeColors : nighttimeColors;
 
-  const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
-  
   return (
     <View style={styles.container}>
-      <Text style={styles.locationText}>
-        Alertes meteo
-      </Text>
+      <Text style={styles.locationText}>Weather Alerts</Text>
       <LinearGradient
         colors={backgroundColors}
         start={{ x: 0, y: 0 }}
@@ -127,8 +152,8 @@ const styles = StyleSheet.create({
     top: 60,
     zIndex: 1,
     fontSize: 24,
-    fontWeight: "bold",
     marginBottom: 30,
+    fontFamily: 'Poppins-bold'
   },
   noAlertText: {
     color: "white",
@@ -137,9 +162,10 @@ const styles = StyleSheet.create({
     top: 50,
     zIndex: 1,
     fontSize: 20,
-    fontWeight: "normal",
     marginBottom: 30,
     paddingHorizontal: 50,
+    fontFamily: 'Poppins',
+
   },
   // alertContainer: {
   //   position: 'absolute',

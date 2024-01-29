@@ -54,6 +54,7 @@ const AddParam: FC<AddParamProps> = ({ selectedParams, setSelectedParams }) => {
               color: selectedParams.includes(filter.id)
                 ? colors.white
                 : colors.black,
+              fontFamily: 'Poppins'
             }}
           />
         ))}
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 20,
     fontSize: 25,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-bold',  
     color: colors.white,
   },
 });

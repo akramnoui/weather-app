@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import RootNavigator from "./src/navigation/RootNavigator";
 import { useState, useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
@@ -6,6 +6,10 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import generatePushNotificationsToken from "./src/notifications/generatePushNotificationToken";
 import usePushNotifications from "./src/notifications/usePushNotifications";
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+
+
 
 
 Notifications.setNotificationHandler({
@@ -50,8 +54,6 @@ export default function App() {
   const { notification } = usePushNotifications((response) =>
   console.log(response)
 );
- 
-
 useEffect(() => {
   const setupNotifications = async () => {
     // requestUserPermission();
@@ -64,6 +66,23 @@ useEffect(() => {
 
   setupNotifications();
 }, []);
+const [fontsLoaded, fontError] = useFonts({
+  'Poppins': require('./assets/fonts/Poppins-Regular.ttf'),
+  'Poppins-bold': require('./assets/fonts/Poppins-Bold.ttf'),
+
+});
+const onLayoutRootView = useCallback(async () => {
+  if (fontsLoaded || fontError) {
+    await SplashScreen.hideAsync();
+  }
+}, [fontsLoaded, fontError]);
+
+if (!fontsLoaded && !fontError) {
+  return null;
+}
+
+ 
+
 
   return <RootNavigator />;
 }

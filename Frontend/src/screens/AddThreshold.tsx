@@ -105,7 +105,7 @@ export const AddThreshold: React.FC = ({ navigation }) => {
           <View style={styles.cityDropdownContainer}>
                 <Text style={styles.labelCity}>Select City:</Text>
                 <RNPickerSelect
-                value={selectedCity}
+                value={selectedCity || 'Paris'}
                 onValueChange={(value) => setSelectedCity(value)}
                 items={prefferedCities.map((city) => ({
                     label: city.name,
@@ -113,6 +113,7 @@ export const AddThreshold: React.FC = ({ navigation }) => {
                 }))}
                 style={pickerStyle}
                 useNativeAndroidPickerStyle={false} // Set to true if you want to use native Android styles
+                
                 />
             </View>
           {/* Render sliders based on selected parameters */}
@@ -198,13 +199,17 @@ export const AddThreshold: React.FC = ({ navigation }) => {
             color: accentColor,
             height: 40,
             marginLeft: 8,
-            fontSize: 20,
+            fontSize: 21,
+            fontFamily: 'Poppins',
+
             // fontWeight: 'bold',
         },
         inputAndroid: {
             color: '#fff',
             height: 40,
             marginLeft: 8,
+            fontSize: 21,
+            fontFamily: 'Poppins',
         },
         placeholder: {
             color: '#fff',
@@ -265,7 +270,7 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         marginRight: 10,
         color: '#fff',
-        fontWeight: 'bold',
+        fontFamily: 'Poppins-bold',
       },
       thresholdTypeContainer: {
         flexDirection: 'row',
@@ -277,6 +282,8 @@ const styles = StyleSheet.create({
       radioLabel: {
         fontSize: 16,
         color: '#fff',
+        fontFamily: 'Poppins',
+
       },
       saveButton: {
         backgroundColor: accentColor,
@@ -292,8 +299,9 @@ const styles = StyleSheet.create({
       },
       buttonText: {
         color: 'white',
-        fontWeight: 'bold',
         fontSize: 16,
+        fontFamily: 'Poppins-bold',
+
       },
       fab: {
         alignSelf: 'flex-end',

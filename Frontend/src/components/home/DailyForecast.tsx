@@ -64,9 +64,9 @@ const styles = StyleSheet.create({
   },
   forecastTitleText: {
     color: "white",
+    fontFamily: 'Poppins-bold',
     fontSize: 18,
     marginLeft: 5,
-    fontWeight: "bold",
     paddingTop: 2,
   },
   forecastScrollView: {
@@ -89,6 +89,8 @@ const styles = StyleSheet.create({
     color: "white",
     marginTop: 5,
     fontSize: 16,
+    fontFamily: 'Poppins',
+
   },
   forecastTemperatureText: {
     color: "white",
