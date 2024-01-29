@@ -28,7 +28,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ weather, weatherImages })
 
           return (
             <View key={index} style={styles.forecastDayContainer}>
-              <Image source={weatherImages[item?.day?.condition?.text]} style={styles.forecastDayImage} />
+              <Image source={weatherImages[item?.day?.condition?.text] || require('../../../assets/images/sun.png')} style={styles.forecastDayImage} />
               <Text style={styles.forecastDayText}>
                 {dayName}
               </Text>
@@ -64,9 +64,9 @@ const styles = StyleSheet.create({
   },
   forecastTitleText: {
     color: "white",
+    fontFamily: 'Poppins-bold',
     fontSize: 18,
     marginLeft: 5,
-    fontWeight: "bold",
     paddingTop: 2,
   },
   forecastScrollView: {
@@ -89,6 +89,8 @@ const styles = StyleSheet.create({
     color: "white",
     marginTop: 5,
     fontSize: 16,
+    fontFamily: 'Poppins',
+
   },
   forecastTemperatureText: {
     color: "white",

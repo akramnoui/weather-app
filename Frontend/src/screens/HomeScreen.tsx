@@ -21,6 +21,7 @@ import * as Notifications from 'expo-notifications';
 import useFirebaseAuth from '../api/useFirebaseAuth'
 import { daytimeColors, nighttimeColors } from '../util/util'
 
+
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(true)
   const [locations, setLocation] = React.useState([])
@@ -47,6 +48,8 @@ export const HomeScreen: React.FC = () => {
     const fetchData = async () => {
       if (restored) {
         console.log(restored);
+                // Continue with other data fetching or processing
+                fetchMyWeatherData();
         // Fetch the notification token only if it hasn't been fetched yet
         const token = await executeRequest();
 
@@ -57,8 +60,7 @@ export const HomeScreen: React.FC = () => {
           await setDoc(userDocRef, { notificationToken: token }, { merge: true });
         }
 
-        // Continue with other data fetching or processing
-        fetchMyWeatherData();
+
       }
     };
 
@@ -73,11 +75,14 @@ export const HomeScreen: React.FC = () => {
     toggleSearch(false)
     setCity(item.name);
     setLoading(true)
+    console.log('++++++++++++++++++++');
+
     await featchWeatherForescast({
       cityName: item.name,
       days: '7'
     })
       .then((data) => {
+        console.log('++++++++++++++++++++', data);
         setWeather(data)
         setLoading(false)
       })
@@ -117,7 +122,7 @@ export const HomeScreen: React.FC = () => {
 
 
 
-  const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
+  const backgroundColors = isDaytime ? nighttimeColors : nighttimeColors
 
 
   if (!restored) {
@@ -141,7 +146,7 @@ export const HomeScreen: React.FC = () => {
         )
         : (
 
-          <SafeAreaView style={{ height: '100%', width: '100%', justifyContent: 'space-around' }}>
+          <SafeAreaView style={{ height: '100%', width: '100%', justifyContent: 'space-around', paddingTop: 50, }}>
 
             <SearchBar
               showSearch={showSearch}
