@@ -11,15 +11,20 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "plugins": [
-      ["expo-build-properties", {
-        "android": {
-          "usesCleartextTraffic": true
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "useNextNotificationsApi": true,
+            "config": {
+              "usesCleartextTraffic": true
+            }
+          }
         }
-      }]],
+      ]
+    ],
     "ios": {
       "supportsTablet": true
     },
