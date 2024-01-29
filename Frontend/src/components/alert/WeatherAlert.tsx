@@ -21,24 +21,6 @@ const WeatherAlert: React.FC<WeatherAlertProps> = ({ cityAlerts }) => {
       ) : (
         <Text style={styles.noAlerts}>{`No weather alerts for ${cityAlerts.city} currently.`}</Text>
       )}
-      {/* Map Component */}
-      {/* <View style={styles.mapContainer}>
-        <View style={styles.mapContainer}>
-          <MapView
-            style={styles.map}
-          >
-            <Marker
-              coordinate={{
-                latitude: cityAlerts.coordinates?.lat,
-                longitude: cityAlerts.coordinates.long,
-              }}
-              pinColor="purple" // any color
-              title={cityAlerts.city} // Use the city name as the title
-              description={`Alerts for ${cityAlerts.city}`} // Add description if needed
-            />
-          </MapView>
-        </View>
-      </View> */}
     </View>
   );
 };
