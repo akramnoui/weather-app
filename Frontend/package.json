@@ -53,8 +53,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/lodash": "^4.14.195",
-    "@types/react": "~18.2.1",
-    "@types/react-native": "^0.71.14",
+    "@types/react": "~18.0.27",
     "@types/react-native-vector-icons": "^6.4.16",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "eslint": "^8.56.0",
@@ -66,5 +65,7 @@
     "typescript": "^4.9.4"
   },
   "private": true,
-  "resolutions": { "@types/react": "17.0.43" }
+  "resolutions": {
+    "@types/react": "17.0.43"
+  }
 }
