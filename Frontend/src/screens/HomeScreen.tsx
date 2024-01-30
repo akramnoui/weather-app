@@ -48,10 +48,9 @@ export const HomeScreen: React.FC = () => {
     const fetchData = async () => {
       if (restored) {
                 // Continue with other data fetching or processing
-        fetchMyWeatherData();
+                fetchMyWeatherData();
         // Fetch the notification token only if it hasn't been fetched yet
         const token = await executeRequest();
-        console.log(token);
 
         // Now you can use the token as needed, for example, save it to Firestore
         if (uid) {

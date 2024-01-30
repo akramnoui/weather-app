@@ -6,6 +6,7 @@ import { Loader } from "../components/misc/Loader";
 import { LinearGradient } from "expo-linear-gradient";
 import { daytimeColors, nighttimeColors } from "../util/util";
 import { checkThresholdAlertsLocally, featchWeatherForescast, fetchWeatherAlerts } from "../api/weather";
+import ThresholdAlert from "../components/alert/ThresholdAlert";
 
 
 export const AlertScreen: React.FC = () => {
@@ -65,28 +66,31 @@ export const AlertScreen: React.FC = () => {
     };
 
     fetchWeatherAlertsForCities();
-  }, [restoredPreferences, prefferedCities]);
+  }, [restoredPreferences, prefferedCities, thresholds]);
 
-  const renderThresholdAlerts = () => {
-    console.log(weatherAlerts);
-    if (weatherAlerts.length > 0) {
-      return (
-        <ScrollView style={{ paddingBottom: 100 }}>
-          {/* {weatherAlerts.map((thresholdAlert, index) => (
-            // Use the WeatherAlert component here for threshold alerts
-          ))} */}
-        </ScrollView>
-      );
-    }
-  };
+  // const renderThresholdAlerts = () => {
+  //   console.log(weatherAlerts);
+  //   if (thresholdAlerts.length > 0) {
+  //     return (
+  //       <ScrollView style={{ paddingBottom: 100 }}>
+  //         {thresholdAlerts.map((thresholdAlert, index) => (
+  //           <ThresholdAlert threshold={thresholdAlert}/>
+  //         ))}
+  //       </ScrollView>
+  //     );
+  //   }
+  // };
 
   const renderAlerts = () => {
     if (weatherAlerts.length > 0) {
       return (
-        <ScrollView style={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
+        <ScrollView style={{ paddingBottom: 200, marginTop: 40 }} showsVerticalScrollIndicator={false}>
           {weatherAlerts.map((cityAlerts, index) => (
             // Use the WeatherAlert component here
             <WeatherAlert key={index} cityAlerts={cityAlerts}/>
+          ))}
+           {thresholdAlerts.length> 0 && thresholdAlerts.map((thresholdAlert, index) => (
+            <ThresholdAlert threshold={thresholdAlert}/>
           ))}
         </ScrollView>
       );
@@ -111,7 +115,7 @@ export const AlertScreen: React.FC = () => {
         style={styles.background}
       />
       {/* <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} /> */}
-      {weatherAlerts.length === 0 && (
+      {weatherAlerts.length === 0 && thresholdAlerts.length === 0 && (
         <Text style={styles.noAlertText}>
           Il n'y a actuellement aucune alerte dans vos villes favorites
         </Text>
@@ -121,7 +125,7 @@ export const AlertScreen: React.FC = () => {
         <View style={styles.loadingContainer}>
           <Text style={{ color: 'white' }}>Loading...</Text>
         </View>
-      ) : renderAlerts()}
+      ) : renderAlerts() }
     </View>
   );
 };

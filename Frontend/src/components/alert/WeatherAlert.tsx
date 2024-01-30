@@ -38,6 +38,8 @@ const styles = StyleSheet.create({
     backdropFilter: 'blur(10px)', // Apply a blur effect
     width: '95%',
     alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingBottom: 10,
     paddingHorizontal: 10,
   },

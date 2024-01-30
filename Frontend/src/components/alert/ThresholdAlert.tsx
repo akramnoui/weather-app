@@ -1,77 +1,92 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import MapView from 'react-native-maps';
+import { View, Text, StyleSheet, Image } from 'react-native';
 
 interface AlertSectionProps {
-  title: string;
-  alerts: any[]; // Adjust the type based on your alert structure
+  threshold: Threshold;
 }
 
-const ThresholdAlert: React.FC<AlertSectionProps> = ({ title, alerts }) => {
+interface Threshold {
+  city: string;
+  value: number;
+  field: string;
+  threshold: string;
+  type: string;
+  currentValue: number;
+}
+
+const camelCaseToNormal = (camelCase: string) => {
+  return camelCase.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase();
+};
+
+const ThresholdAlert: React.FC<AlertSectionProps> = ({ threshold }) => {
+  const getUnit = () => {
+    switch (threshold.field) {
+      case 'humidityLevel':
+        return '%';
+      case 'temperature':
+        return '°C';
+      case 'windSpeed':
+        return 'm/s';
+      case 'precipitation':
+        return 'mm';
+      default:
+        return '';
+    }
+  };
+
+  const unit = getUnit();
+
   return (
-
     <View style={styles.alertSectionContainer}>
-      <Text style={styles.alertTitle}>{title}</Text>
-
-      {alerts.map((alert, alertIndex) => (
-
-        alert.msgtype != "" ? (
-          <View key={alertIndex} style={styles.alertContainer}>
-            <View style={{ flexDirection: "row", alignItems: 'center', }}>
-              <Image source={require("../../../assets/icons/warning-sign.png")} style={{ marginRight: 7, marginBottom: 10 }} />
-              <Text style={styles.alertHeadline}>{alert.severity} {alert.event}</Text>
-            </View>
-            <Text style={styles.alertCategory}>
-              <Text style={{ color: 'lightgrey', fontWeight: "300", fontSize: 15 }}>Category: </Text>
-              {alert.category}
-            </Text>
-
-            <Text style={{ color: "lightgrey", fontSize: 15, fontWeight: "300" }}>
-              Areas concernerd
-            </Text>
-
-            <View style={styles.areasContainer}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {alert.areas.split(";").map((area, areaIndex) => (
-                  <TouchableOpacity key={areaIndex} style={styles.areaElement}>
-                    <Text style={{ fontWeight: "400", color: "lightgrey" }}>{area}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-
-            {alertIndex != (alerts.length - 1) ? (
-              <View style={styles.separator} />
-            ) : (null)
-            }
-
-            {/* <Text style={styles.alertTime}>{`Effective: ${alert.effective} - Expires: ${alert.expires}`}</Text> */}
-          </View>
-
-        ) : (null)
-
-      ))}
-
+      <Text style={styles.alertTitle}>Threshold alert for {threshold.city}</Text>
+      <View style={styles.alertContainer}>
+        <View style={styles.alertHeader}>
+          <Image source={require("../../../assets/icons/warning-sign.png")} style={styles.warningIcon} />
+          <Text style={styles.alertCategory}>
+            {camelCaseToNormal(threshold.field)} is {threshold.type} {threshold.value} {unit}
+          </Text>
+        </View>
+      </View>
+      <Text style={styles.alertDesc}>Current value: {threshold.currentValue} {unit}</Text>
     </View>
   );
 };
 
+
 const styles = StyleSheet.create({
   alertSectionContainer: {
-    padding: 20,
+    marginTop: 50,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Adjust the alpha value for opacity
+    backdropFilter: 'blur(10px)', // Apply a blur effect
+    width: '95%',
     alignSelf: 'center',
-    borderWidth: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
   alert: {
     marginBottom: 15,
   },
   alertTitle: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
     color: 'white',
+  },
+  alertHeader: {
+    flexDirection: "row",
+    alignItems: 'center',
+  },
+  warningIcon: {
+    marginRight: 7,
+    marginBottom: 10,
   },
   alertContainer: {
     borderRadius: 8,
@@ -91,9 +106,10 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   alertDesc: {
-    fontSize: 14,
+    fontSize: 18,
     marginBottom: 6,
-    color: 'white',
+    color: '#FF9800',
+    fontFamily: 'Poppins-bold',
   },
   alertTime: {
     fontSize: 14,

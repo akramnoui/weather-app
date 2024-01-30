@@ -84,7 +84,6 @@ export const checkThresholdAlertsLocally = async (thresholds: any) => {
 
           const apiFieldName = apiFieldMapping[field];
           const weatherValue = weatherData.current[apiFieldName];
-          console.log('field name weather', apiFieldName, weatherValue);
 
 
           if (
@@ -97,8 +96,10 @@ export const checkThresholdAlertsLocally = async (thresholds: any) => {
                   alerts.push({
                     city: cityName,
                     field,
-                    value: weatherValue,
+                    value: thresholdValue,
                     threshold: thresholdValue,
+                    type: thresholdType,
+                    currentValue: weatherValue,
                   });
                 }
                 break;
@@ -107,8 +108,11 @@ export const checkThresholdAlertsLocally = async (thresholds: any) => {
                   alerts.push({
                     city: cityName,
                     field,
-                    value: weatherValue,
+                    value: thresholdValue,
                     threshold: thresholdValue,
+                    type: thresholdType,
+                    currentValue: weatherValue,
+
                   });
                 }
                 break;
@@ -117,8 +121,10 @@ export const checkThresholdAlertsLocally = async (thresholds: any) => {
                   alerts.push({
                     city: cityName,
                     field,
-                    value: weatherValue,
+                    value: thresholdValue,
                     threshold: thresholdValue,
+                    type: thresholdType,
+                    currentValue: weatherValue,
                   });
                 }
                 break;
