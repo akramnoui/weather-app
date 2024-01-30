@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import RootNavigator from "./src/navigation/RootNavigator";
 import { useState, useEffect, useRef } from 'react';
-import { Platform } from 'react-native';
+import { LogBox, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import generatePushNotificationsToken from "./src/notifications/generatePushNotificationToken";
@@ -54,6 +54,8 @@ export default function App() {
   const { notification } = usePushNotifications((response) =>
   console.log(response)
 );
+LogBox.ignoreAllLogs();//Ignore all log notifications
+
 useEffect(() => {
   const setupNotifications = async () => {
     // requestUserPermission();

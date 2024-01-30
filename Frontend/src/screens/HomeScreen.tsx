@@ -119,7 +119,7 @@ export const HomeScreen: React.FC = () => {
 
 
 
-  const backgroundColors = isDaytime ? nighttimeColors : nighttimeColors
+  const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
 
 
   if (!restored) {

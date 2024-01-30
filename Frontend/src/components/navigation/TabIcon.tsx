@@ -7,6 +7,7 @@ import React from 'react';
 
 import Icon2 from 'react-native-vector-icons/FontAwesome'; 
 import { colors } from 'react-native-elements';
+import { accentColor } from '../../util/util';
 const SettingsIcon = () => {
   return (
     <View>
@@ -38,7 +39,7 @@ export const TabIcon: React.FC<Props> = ({
   size,
   route,
 }) => {
-  const iconColor = focused ? '#536878' : color
+  const iconColor = focused ? accentColor : color
   return (
     <View style={[styles.tab, focused && styles.tabFocused]}>
       <Icon name={iconMapper[route.name]} color={iconColor} size={size} />

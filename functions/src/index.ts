@@ -236,60 +236,61 @@ export const checkThresholdAlerts = functions.https.onCall(async (data, context)
 
   return null;
 });
-// export const checkAlertsAndSendNotifications = functions.pubsub
-//   .schedule("every 4 hours")
-//   .timeZone("your-timezone") // Specify your timezone
-//   .onRun(async (context) => {
-//     // Fetch all user documents
-//     const usersSnapshot = await db.collection("users").get();
 
-//     if (usersSnapshot.empty) {
-//       console.log("No users found.");
-//       return null;
-//     }
+export const checkAlertsAndSendNotifications = functions.pubsub
+  .schedule("every 4 hours")
+  .timeZone("Europe/Paris") // Set the timezone to Paris
+  .onRun(async (context) => {
+    // Fetch all user documents
+    const usersSnapshot = await db.collection("users").get();
 
-//     // Loop through each user document
-//     usersSnapshot.forEach(async (userDoc) => {
-//       const userUid = userDoc.id;
+    if (usersSnapshot.empty) {
+      console.log("No users found.");
+      return null;
+    }
 
-//       // Fetch all thresholds for the current user
-//       const thresholdsSnapshot =
-//       await db.collection(`users/${userUid}/thresholds`).get();
+    // Loop through each user document
+    usersSnapshot.forEach(async (userDoc) => {
+      const userUid = userDoc.id;
 
-//       if (thresholdsSnapshot.empty) {
-//         console.log(`No thresholds found for user ${userUid}.`);
-//         return null;
-//       }
+      // Fetch all thresholds for the current user
+      const thresholdsSnapshot =
+      await db.collection(`users/${userUid}/thresholds`).get();
 
-//       // Loop through each threshold and check for alerts
-//       thresholdsSnapshot.forEach(async (thresholdDoc) => {
-//         const thresholdData = thresholdDoc.data();
-//         const cityName = thresholdData.name;
+      if (thresholdsSnapshot.empty) {
+        console.log(`No thresholds found for user ${userUid}.`);
+        return null;
+      }
 
-//         // Fetch weather data for the city
-//         const weatherData = await featchWeatherForescast({
-//           cityName: cityName,
-//           days: "1", // You may adjust the number of days based on your needs
-//         });
+      // Loop through each threshold and check for alerts
+      thresholdsSnapshot.forEach(async (thresholdDoc) => {
+        const thresholdData = thresholdDoc.data();
+        const cityName = thresholdData.name;
 
-//         // Check for alerts and send notifications
-//         if (weatherData && weatherData.current) {
-//           const temperature = weatherData.current.temp_c;
-//           const expoPushToken = userDoc.data()?.notificationToken;
+        // Fetch weather data for the city
+        const weatherData = await featchWeatherForescast({
+          cityName: cityName,
+          days: "1", // You may adjust the number of days based on your needs
+        });
 
-//           if (expoPushToken && temperature > thresholdData.temperature) {
-//             // Send push notification
-//             await sendPushNotification({
-//               pushToken: expoPushToken,
-//               // eslint-disable-next-line max-len, max-len
-//               message: `Temperature in ${cityName}:
-//  ${temperature}°C exceeds the threshold!`,
-//             });
-//           }
-//         }
-//       });
-//     });
+        // Check for alerts and send notifications
+        if (weatherData && weatherData.current) {
+          const temperature = weatherData.current.temp_c;
+          const expoPushToken = userDoc.data()?.notificationToken;
 
-//     return null;
-//   });
+          if (expoPushToken && temperature > thresholdData.temperature) {
+            // Send push notification
+            await sendPushNotification({
+              pushToken: expoPushToken,
+              // eslint-disable-next-line max-len, max-len
+              message: `Temperature in ${cityName}:
+ ${temperature}°C exceeds the threshold!`,
+            });
+          }
+        }
+      });
+    });
+
+    return null;
+  });
 

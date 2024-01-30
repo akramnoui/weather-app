@@ -93,7 +93,7 @@ export const AlertScreen: React.FC = () => {
           <ThresholdAlert key={index} threshold={thresholdAlert} />
         ))}
         {weatherAlerts.length === 0 && thresholdAlerts.length === 0 && (
-          <Text>No alerts available</Text>
+          <></>
         )}
       </ScrollView>
     );
