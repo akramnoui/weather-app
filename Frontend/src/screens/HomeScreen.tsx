@@ -104,6 +104,7 @@ export const HomeScreen: React.FC = () => {
         cityName,
         days: '7'
       })
+      console.log(data);
       setWeather(data)
       setLoading(false)
     }

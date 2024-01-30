@@ -66,6 +66,7 @@ export const AlertScreen: React.FC = () => {
     };
 
     fetchWeatherAlertsForCities();
+    console.log('triggered');
   }, [restoredPreferences, prefferedCities, thresholds]);
 
   // const renderThresholdAlerts = () => {
@@ -82,20 +83,20 @@ export const AlertScreen: React.FC = () => {
   // };
 
   const renderAlerts = () => {
-    if (weatherAlerts.length > 0) {
-      return (
-        <ScrollView style={{ paddingBottom: 200, marginTop: 40 }} showsVerticalScrollIndicator={false}>
-          {weatherAlerts.map((cityAlerts, index) => (
-            // Use the WeatherAlert component here
-            <WeatherAlert key={index} cityAlerts={cityAlerts}/>
-          ))}
-           {thresholdAlerts.length> 0 && thresholdAlerts.map((thresholdAlert, index) => (
-            <ThresholdAlert threshold={thresholdAlert}/>
-          ))}
-        </ScrollView>
-      );
-    }
-    // Your existing code for no alerts
+    return (
+      <ScrollView contentContainerStyle={{ paddingBottom: 200, marginTop: 40 }} showsVerticalScrollIndicator={false}>
+        {weatherAlerts.length > 0 && weatherAlerts.map((cityAlerts, index) => (
+          // Use the WeatherAlert component here
+          <WeatherAlert key={index} cityAlerts={cityAlerts} />
+        ))}
+        {thresholdAlerts.length > 0 && thresholdAlerts.map((thresholdAlert, index) => (
+          <ThresholdAlert key={index} threshold={thresholdAlert} />
+        ))}
+        {weatherAlerts.length === 0 && thresholdAlerts.length === 0 && (
+          <Text>No alerts available</Text>
+        )}
+      </ScrollView>
+    );
   };
 
 
