@@ -20,13 +20,17 @@ The Weather Alerts Expo App is a mobile application developed with Expo, providi
 
 ## Captures d'écran
 
-![Capture d'écran de l'écran d'acceuil](screenshot.png)
+![Capture d'écran de l'écran d'acceuil]()
 
-![Capture d'écrand de l'écran des préférences de villes](screenshot.png)
+![Capture d'écrand de l'écran des préférences de villes](screenshots/1.png)
 
-![Capture d'écrand de l'écran des seuils](screenshot.png)
+![Capture d'écrand de l'écran des seuils](screenshots/2.png)
 
-![Capture d'écrand des alertes](screenshot.png)
+![Capture d'écrand des alertes](screenshots/3.png)
+
+![Capture d'écrand des alertes](screenshots/4.png)
+
+![Capture d'écrand des alertes](screenshots/a.png)
 
 ## Installation
 
