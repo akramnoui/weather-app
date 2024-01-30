@@ -21,6 +21,8 @@ import { useMainCtx } from "../context/MainContext";
 import { Loader } from "../components/misc/Loader";
 import { firestore } from "../../firebaseConfig";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { LinearGradient } from "expo-linear-gradient";
+import { daytimeColors, nighttimeColors } from "../util/util";
 
 export const PREFERRED_CITIES_KEY = "preferredCities"; // AsyncStorage key for storing preferred cities
 
@@ -36,10 +38,16 @@ export const Preferences: React.FC = ({ navigation }) => {
   const [locations, setLocation] = useState([]);
   const [weather, setWeather] = useState<Weather>({} as Weather);
   const [loading, setLoading] = useState(true);
-  const {prefferedCities, SetPrefferedCities, restoredPreferences, uid} = useMainCtx()
+  const { prefferedCities, SetPrefferedCities, restoredPreferences, uid } = useMainCtx()
+  const [isDaytime, setIsDaytime] = React.useState(true)
 
 
   useEffect(() => {
+
+    // Determine if it's daytime or nighttime based on the current time
+    const currentHour = new Date().getHours();
+    setIsDaytime(currentHour >= 6 && currentHour < 18);
+
     // Load preferred cities from cache on component mount
 
     const loadPreferredCities = async () => {
@@ -54,9 +62,9 @@ export const Preferences: React.FC = ({ navigation }) => {
         console.error("Error loading preferred cities from cache:", error);
       }
     };
-    if(restoredPreferences){
+    if (restoredPreferences) {
 
-    loadPreferredCities();
+      loadPreferredCities();
     }
   }, [restoredPreferences]);
 
@@ -67,41 +75,41 @@ export const Preferences: React.FC = ({ navigation }) => {
       console.error("Error saving preferred cities to cache:", error);
     }
   };
-  
+
   const handleLocation = async (item: Location) => {
     setLocation([]);
     toggleSearch(false);
     setLoading(true);
-  
+
     try {
       // Fetch the user document reference based on the UID
       const userDocRef = doc(firestore, "users", uid);
-  
+
       // Get the user document to check if it exists
       const data = await featchWeatherForescast({
         cityName: item.name,
         days: "7",
       })
-  
-        // Proceed with the rest of the function
-        const newCity = {
-          name: item.name,
-          coordinates: { lat: item.lat, long: item.long },
-          temperature: data.current.temp_c,
-          condition: data.current.condition.text,
-        };
-  
-        // Add the new city data to the 'cities' subcollection
-        const citiesCollectionRef = collection(userDocRef, "cities");
-        await addDoc(citiesCollectionRef, {name : newCity.name});
-  
-        const updatedCities = [...selectedCities, newCity];
-        setSelectedCities(updatedCities);
-        savePreferredCitiesToCache(updatedCities); // Save to cache
 
-        console.log("User document does not exist");
-        setLoading(false);
-      
+      // Proceed with the rest of the function
+      const newCity = {
+        name: item.name,
+        coordinates: { lat: item.lat, long: item.long },
+        temperature: data.current.temp_c,
+        condition: data.current.condition.text,
+      };
+
+      // Add the new city data to the 'cities' subcollection
+      const citiesCollectionRef = collection(userDocRef, "cities");
+      await addDoc(citiesCollectionRef, { name: newCity.name });
+
+      const updatedCities = [...selectedCities, newCity];
+      setSelectedCities(updatedCities);
+      savePreferredCitiesToCache(updatedCities); // Save to cache
+
+      console.log("User document does not exist");
+      setLoading(false);
+
     } catch (error) {
       console.error("Error fetching user document:", error);
       setLoading(false);
@@ -124,40 +132,53 @@ export const Preferences: React.FC = ({ navigation }) => {
 
   const handleTextDebounce = useCallback(debounce((value: string) => handleSearch(value), 1200), []);
 
-  if(!restoredPreferences){
-    return <Loader/>;
+  if (!restoredPreferences) {
+    return <Loader />;
   }
+
+
+
+  const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
+
+
   return (
     <SafeAreaView style={styles.container}>
+      
       <StatusBar style="light" />
-      <SearchBar
-            showSearch={showSearch}
-            toggleSearch={toggleSearch}
-            handleTextDebouce={handleTextDebounce}
-            locations={locations}
-            handleLocation={handleLocation}
-          />
-
       <Text style={styles.locationText}>Preferred cities</Text>
-      <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} />
-      <TouchableWithoutFeedback style={[{height: '100%', paddingBottom: 20,}]} onPress={() => toggleSearch(false)}>
 
-      <ScrollView contentContainerStyle={styles2.cardContainer}>
+      <SearchBar
+        showSearch={showSearch}
+        toggleSearch={toggleSearch}
+        handleTextDebouce={handleTextDebounce}
+        locations={locations}
+        handleLocation={handleLocation}
+      />
+      <LinearGradient
+        colors={backgroundColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.background}
+      />
+      
 
-        {selectedCities.map((city, index) => (
-          <WeatherCard
-            key={index}
-            city={city}
-            temperature={city.temperature}
-            condition={city.condition}
-            onRemove={() => removeCity(index)}
-            toggleSearch={toggleSearch}
-            navigation={navigation}
-          />
-        ))}
-      </ScrollView>
-      </TouchableWithoutFeedback> 
+      {/* <Image blurRadius={70} source={require("../../assets/images/bg.png")} style={styles.background} /> */}
+      <TouchableWithoutFeedback style={[{ height: '100%', paddingBottom: 20, }]} onPress={() => toggleSearch(false)}>
+        <ScrollView contentContainerStyle={styles2.cardContainer}>
 
+          {selectedCities.map((city, index) => (
+            <WeatherCard
+              key={index}
+              city={city}
+              temperature={city.temperature}
+              condition={city.condition}
+              onRemove={() => removeCity(index)}
+              toggleSearch={toggleSearch}
+              navigation={navigation}
+            />
+          ))}
+        </ScrollView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
@@ -171,35 +192,26 @@ const WeatherCard: React.FC<{
   toggleSearch: any;
   navigation: any;
 }> = ({ city, temperature, condition, toggleSearch, navigation }) => {
-  const {setCity} = useMainCtx();
+  const { setCity } = useMainCtx();
 
-  const onCradPress = () =>{
+  const onCradPress = () => {
     toggleSearch(false)
     setCity(city.name);
-    navigation.navigate(NavigationKey.HomeScreen)  }
-    
+    navigation.navigate(NavigationKey.HomeScreen)
+  }
+
   return (
-      <><TouchableOpacity
+    <><TouchableOpacity
       style={styles2.mainContainer}
       onPress={onCradPress} // You can handle other actions here
     >
       <View style={styles2.weatherCard}>
         <Text style={styles2.cityText}>{city.name}</Text>
-        <Text style={styles2.temperatureText}>{`${temperature}°C`}</Text>
+        <Text style={styles2.temperatureText}> {Math.round(temperature)}&#176;</Text>
         <Text style={styles2.conditionText}>{condition}</Text>
       </View>
       <Image source={weatherImages[city.condition]} style={styles2.weatherImage} />
-    {/* </TouchableOpacity><TouchableOpacity
-      style={{
-        backgroundColor: 'red',
-        padding: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      onPress={handleSwipe}
-    >
-        <Text style={{ color: 'white' }}>Delete</Text> */}
-      </TouchableOpacity></>
+    </TouchableOpacity></>
   );
 };
 
@@ -214,8 +226,9 @@ const styles2 = StyleSheet.create({
     padding: 16,
     marginBottom: 10,
     backdropFilter: 'blur(10px)', // Apply a blur effect
+    marginTop: 20,
   },
-  
+
   cardContainer: {
     paddingHorizontal: 16,
     paddingTop: 20,
@@ -225,16 +238,20 @@ const styles2 = StyleSheet.create({
   },
   cityText: {
     fontSize: 18,
-    fontWeight: "bold",
     marginBottom: 8,
+    fontFamily: 'Poppins-bold',
   },
   temperatureText: {
-    fontSize: 16,
+    fontSize: 22,
     marginBottom: 4,
+    fontFamily: 'Poppins',
+
   },
   conditionText: {
     fontSize: 14,
     color: "#555",
+    fontFamily: 'Poppins-bold',
+
   },
   weatherImage: {
     width: 70,
@@ -246,7 +263,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: '100%',
     width: '100%',
-
   },
   background: {
     position: "absolute",
@@ -265,7 +281,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     zIndex: 1,
     fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 30,
+    marginTop: 50,
+    fontFamily: 'Poppins-bold',
   },
 });

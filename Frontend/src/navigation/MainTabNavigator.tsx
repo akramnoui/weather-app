@@ -13,7 +13,6 @@ import { RootStackParamList } from './RootNavigator';
 import { TabIcon } from '../components/navigation/TabIcon';
 import React, { useEffect } from 'react';
 import Threshold_Settings from '../screens/Threshold_Settings';
-import { LinearGradient } from 'expo-linear-gradient';
 
 
 
@@ -38,8 +37,9 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
 
   const [isDaytime, setIsDaytime] = React.useState(true)
 
-  const daytimeColors = ['#29B2DD', '#3AD', '#2DC8EA']
-  const nighttimeColors = ['#08244F', '#134CB5', '#0B42AB']
+  const daytimeColors = '#87CEEB'
+  const nighttimeColors = '#001F3F'
+
 
   const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
 
@@ -54,19 +54,9 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         headerShown: false,
-        tabBarIcon: props => <TabIcon {...props} route={route} />,
-        //   tabBarActiveTintColor: Theme.light.colors.primary,
-        tabBarStyle: styles.tabBar,
-        // tabBarBackground: () => (
-        //   <View style={{ flex: 1 }}>
-        //     <LinearGradient
-        //       colors={backgroundColors}
-        //       start={{ x: 0, y: 0.5 }}
-        //       end={{ x: 1, y: 0.5 }}
-        //       style={styles.linearGradient}
-        //     />
-        //   </View>
-        // ),
+        tabBarIcon: props => <TabIcon {...props} color='white' route={route} />,
+          tabBarActiveTintColor: "blue",
+        tabBarStyle: styles(backgroundColors).tabBar,
       })}
       initialRouteName={NavigationKey.HomeScreen}>
       <Tab.Screen name={NavigationKey.HomeScreen} component={HomeScreen} />
@@ -79,17 +69,26 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
         component={Preferences}
       />
 
-        <Tab.Screen
-         name={NavigationKey.Threshold_Settings}
-         component={Threshold_Settings}
-        />
-      </Tab.Navigator>
-    );
-  };
-  
-  const styles = StyleSheet.create({
-    tabBar: {
-      elevation: 0,
-      borderTopWidth: 0,
-    },
-  });
+      <Tab.Screen
+        name={NavigationKey.Threshold_Settings}
+        component={Threshold_Settings}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const styles = (backgroundColors) => StyleSheet.create({
+  tabBar: {
+    elevation: 0,
+    borderTopWidth: 0,
+    borderTopWidth: 0.8,
+    backgroundColor: backgroundColors,
+    borderBlockColor: 'white',
+    borderCurve: 'circular'
+  },
+  linearGradient: {
+    flex: 1,
+    height: '100%',
+    width: '100%'
+  }
+});

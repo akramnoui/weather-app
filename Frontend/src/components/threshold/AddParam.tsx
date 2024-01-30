@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Label } from "./Label";
+import { accentColor } from "../../util/util";
 
 interface AddParamProps {
   selectedParams: string[];
@@ -33,7 +34,7 @@ const AddParam: FC<AddParamProps> = ({ selectedParams, setSelectedParams }) => {
 
   const calculateLabelStyle = (filterId: string) => ({
     backgroundColor: selectedParams.includes(filterId)
-      ? 'blue'
+      ? accentColor
       : colors.white,
   });
 
@@ -53,6 +54,7 @@ const AddParam: FC<AddParamProps> = ({ selectedParams, setSelectedParams }) => {
               color: selectedParams.includes(filter.id)
                 ? colors.white
                 : colors.black,
+              fontFamily: 'Poppins'
             }}
           />
         ))}
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 20,
     fontSize: 25,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-bold',  
     color: colors.white,
   },
 });

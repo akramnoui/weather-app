@@ -11,16 +11,13 @@ const useFirebaseAuth = () => {
   useEffect(() => {
 
     const signInAndListen = async () => {
-        console.log('-----', uid);
         if(!uid){
             try {
                 const user = await signIn(auth);
                 const uid = user.user.tenantId;
-                console.log('first login', uid);
 
               } catch (error) {
                 console.error(error);
-                // Handle error...
               }
         }
      
@@ -28,11 +25,7 @@ const useFirebaseAuth = () => {
       const unsubscribe = authListener(auth, async (user) => {
         if (user) {
           const uid = user.uid;
-          console.log('we found the UID xoxox', uid);
-          const docRef = await setDoc(doc(collection(firestore, "users"), uid), {
-            first: "Ada",
-            last: "Lovelace",
-          });
+          const docRef = await setDoc(doc(collection(firestore, "users"), uid), {});
           setUid(uid);
         } else {
           // Handle user signed out

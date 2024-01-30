@@ -1,12 +1,28 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Button, TouchableOpacity, ImageBackground } from 'react-native';
 import { Card, Title, Paragraph, FAB } from 'react-native-paper';
 import { useMainCtx } from '../context/MainContext';
 import { NavigationKey } from '../navigation/NavigationKey';
 import { ScrollView } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
+import { accentColor, daytimeColors, nighttimeColors } from '../util/util';
 
 const Threshold: React.FC = ({ navigation }) => {
-  const { thresholds, setThresholds } = useMainCtx(); // Assuming you have a context for thresholds
+  const { thresholds, setThresholds } = useMainCtx(); 
+  const [isDaytime, setIsDaytime] = React.useState(true)
+
+  const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
+
+
+  useEffect(() => {
+
+    // Determine if it's daytime or nighttime based on the current time
+    const currentHour = new Date().getHours();
+    setIsDaytime(currentHour >= 6 && currentHour < 18);
+
+   
+  }, []);
+
 
   const renderThresholdFields = (threshold) => {
     const fields = [];
@@ -54,17 +70,40 @@ const Threshold: React.FC = ({ navigation }) => {
 
   return (
     <View style={styles.mainContainer}>
-      <Text style={styles.title}>Seuil Météo</Text>
+            <Text style={styles.locationText}>
+        Custom Threshold Alerts
+      </Text>
+      <LinearGradient
+        colors={backgroundColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.background}
+      />
       <ScrollView contentContainerStyle={styles.container}>
         {/* Display cards for each threshold in the array */}
+        {thresholds.length === 0 && (
+        <Text style={styles.noAlertText}>
+        You can set your thresholds for weather parameters here.{'\n\n'} Click the 'Plus' button to add an alert threshold.
+        </Text>      )}
         {thresholds.map((threshold, index) => (
+          
           <Card key={index} style={styles.card}>
             <Card.Content>
+            {/* <ImageBackground
+            key={index}
+            source={require('../../assets/images/2.jpg')}
+            style={styles.imageBackground}
+            imageStyle={styles.gradientOverlay}
+          > */}
               <Title style={styles.cardTitle}>Threshold {index + 1}</Title>
               {renderThresholdFields(threshold)}
+            {/* </ImageBackground> */}
+
             </Card.Content>
             <Card.Actions>
-              <TouchableOpacity onPress={() => handleDeleteThreshold(index)}><Text>delete</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDeleteThreshold(index)}>
+                <Text>delete</Text>
+              </TouchableOpacity>
             </Card.Actions>
           </Card>
         ))}
@@ -72,7 +111,10 @@ const Threshold: React.FC = ({ navigation }) => {
       <FAB
         icon="plus"
         onPress={() =>
-          navigation.navigate(NavigationKey.ModalNavigator, NavigationKey.AddThreshold)
+          navigation.navigate(
+            NavigationKey.ModalNavigator,
+            NavigationKey.AddThreshold
+          )
         }
         style={styles.fab}
       />
@@ -84,12 +126,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#82a0f1',
     paddingVertical: 50,
   },
   mainContainer:{
     flex: 1,
-    backgroundColor: '#82a0f1',
     paddingTop: 50,
     justifyContent: 'center',
   },
@@ -102,6 +142,7 @@ const styles = StyleSheet.create({
     right: 30,
     justifyContent: 'center', // Center the content vertically
     alignItems: 'center', // Center the content horizontally
+    backgroundColor: accentColor,
   },
   title: {
     fontSize: 24,
@@ -111,9 +152,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   card: {
-    width: '80%',
+    width: '100%',
     marginBottom: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "rgba(255, 255, 255, 0.8)", // Adjust the alpha value for opacity
+    // backdropFilter: 'blur(10px)', // Apply a blur effect
   },
   cardTitle: {
     fontSize: 20,
@@ -121,6 +163,53 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: 16,
+  },
+  noAlertText: {
+    color: "white",
+    textAlign: "center",
+    alignSelf: 'center',
+    top: 50,
+    zIndex: 1,
+    fontSize: 20,
+    marginBottom: 30,
+    paddingHorizontal: 10,
+    fontFamily: 'Poppins',
+
+  },
+  background: {
+    position: "absolute",
+    width: "100%",
+    height: "120%",
+  },
+  locationText: {
+    color: "white",
+    textAlign: "center",
+    alignSelf: 'center',
+    zIndex: 1,
+    fontSize: 24,
+    marginTop: 20,
+    fontFamily: 'Poppins-bold',
+  },
+  imageBackground: {
+    flex: 1,
+    resizeMode: 'cover', // or 'stretch' or 'contain'
+    justifyContent: 'center',
+  },
+  gradientOverlay: {
+    // backgroundColor: 'rgba(0, 0, 0, 0.3)', // Adjust the opacity and color as needed
+    // opacity: 0.6,
+
+  },
+ 
+  cardContent: {
+    marginBottom: 8,
+  },
+  cardActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  deleteText: {
+    color: 'white', // Adjust the text color
   },
 });
 

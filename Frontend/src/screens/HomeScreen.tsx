@@ -19,6 +19,8 @@ import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
 import { auth, firestore } from '../../firebaseConfig'
 import * as Notifications from 'expo-notifications';
 import useFirebaseAuth from '../api/useFirebaseAuth'
+import { daytimeColors, nighttimeColors } from '../util/util'
+
 
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(true)
@@ -45,35 +47,33 @@ export const HomeScreen: React.FC = () => {
 
     const fetchData = async () => {
       if (restored) {
-        console.log(restored);
+                // Continue with other data fetching or processing
+                fetchMyWeatherData();
         // Fetch the notification token only if it hasn't been fetched yet
         const token = await executeRequest();
 
         // Now you can use the token as needed, for example, save it to Firestore
         if (uid) {
-          console.log(uid);
           const userDocRef = doc(collection(firestore, "users"), uid);
           await setDoc(userDocRef, { notificationToken: token }, { merge: true });
         }
 
-        // Continue with other data fetching or processing
-        fetchMyWeatherData();
+
       }
     };
 
     fetchData();
   }, [restored, city, uid]);
 
-  const daytimeGradient = 'linear-gradient(167deg, #29B2DD 0%, #3AD 47.38%, #2DC8EA 100%)'
-  const nighttimeGradient = 'linear-gradient(167deg, #08244F 0%, #134CB5 47.38%, #0B42AB 100%)'
 
-  const backgroundGradient = isDaytime ? daytimeGradient : nighttimeGradient
+  // const backgroundGradient = isDaytime ? daytimeGradient : nighttimeGradient
 
   const handleLocation = async (item: Location): Promise<void> => {
     setLocation([])
     toggleSearch(false)
     setCity(item.name);
     setLoading(true)
+
     await featchWeatherForescast({
       cityName: item.name,
       days: '7'
@@ -116,10 +116,9 @@ export const HomeScreen: React.FC = () => {
   const handleTextDebouce = useCallback(debounce((value: string) => { handleSearch(value) }, 200), [])
   const { current, location } = weather;
 
-  const daytimeColors = ['#29B2DD', '#3AD', '#2DC8EA']
-  const nighttimeColors = ['#08244F', '#134CB5', '#0B42AB']
 
-  const backgroundColors = isDaytime ? daytimeColors : nighttimeColors
+
+  const backgroundColors = isDaytime ? nighttimeColors : nighttimeColors
 
 
   if (!restored) {
@@ -143,7 +142,7 @@ export const HomeScreen: React.FC = () => {
         )
         : (
 
-          <SafeAreaView style={{ height: '100%', width: '100%', justifyContent: 'space-around' }}>
+          <SafeAreaView style={{ height: '100%', width: '100%', justifyContent: 'space-around', paddingTop: 50, }}>
 
             <SearchBar
               showSearch={showSearch}
